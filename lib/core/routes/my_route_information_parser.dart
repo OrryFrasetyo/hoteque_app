@@ -1,0 +1,55 @@
+import 'package:flutter/material.dart';
+import 'package:hoteque_app/core/routes/app_route_path.dart';
+
+class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
+  @override
+  Future<AppRoutePath> parseRouteInformation(
+    RouteInformation routeInformation,
+  ) async {
+    final uri = Uri.parse(routeInformation.uri.toString());
+
+    if (uri.pathSegments.isEmpty) {
+      return AppRoutePath.unknown();
+    }
+
+    if (uri.pathSegments.first == 'login') {
+      return AppRoutePath.login();
+    }
+
+    if (uri.pathSegments.first == 'register') {
+      return AppRoutePath.register();
+    }
+
+    if (uri.pathSegments.first == 'home') {
+      return AppRoutePath.home(tabIndex: 0);
+    }
+
+    return AppRoutePath.unknown();
+  }
+
+  @override
+  RouteInformation? restoreRouteInformation(AppRoutePath configuration) {
+    if (configuration.isUnknown) {
+      return RouteInformation(uri: Uri.parse("/unknown"));
+    }
+
+    if (configuration.isRegisterScreen) {
+      return RouteInformation(uri: Uri.parse("/register"));
+    }
+
+    if (configuration.isLoginScreen) {
+      return RouteInformation(uri: Uri.parse("/login"));
+    }
+
+    if (configuration.isMainScreen) {
+      final tabIndex = configuration.tabIndex ?? 0;
+      if (tabIndex == 0) {
+        return RouteInformation(uri: Uri.parse("/home"));
+      }
+
+      /// tambahkan route untuk tab lainnya jika ada
+      return RouteInformation(uri: Uri.parse("/"));
+    }
+    return RouteInformation(uri: Uri.parse("/"));
+  }
+}
