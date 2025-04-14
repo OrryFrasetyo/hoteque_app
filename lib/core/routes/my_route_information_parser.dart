@@ -12,6 +12,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return AppRoutePath.unknown();
     }
 
+    if (uri.pathSegments.first == 'welcome') {
+      return AppRoutePath.welcome();
+    }
+
     if (uri.pathSegments.first == 'login') {
       return AppRoutePath.login();
     }
@@ -33,6 +37,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return RouteInformation(uri: Uri.parse("/unknown"));
     }
 
+    if (configuration.isWelcomeScreen) {
+      return RouteInformation(uri: Uri.parse("/welcome"));
+    }
+
     if (configuration.isRegisterScreen) {
       return RouteInformation(uri: Uri.parse("/register"));
     }
@@ -48,7 +56,6 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       }
 
       /// tambahkan route untuk tab lainnya jika ada
-      return RouteInformation(uri: Uri.parse("/"));
     }
     return RouteInformation(uri: Uri.parse("/"));
   }

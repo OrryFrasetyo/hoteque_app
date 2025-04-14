@@ -1,32 +1,45 @@
 class AppRoutePath {
+  final bool isWelcomeScreen;
   final bool isRegisterScreen;
   final bool isLoginScreen;
   final bool isMainScreen;
   final bool isUnknown;
   final int? tabIndex;
 
+  AppRoutePath.welcome()
+    : isWelcomeScreen = true,
+      isLoginScreen = false,
+      isRegisterScreen = false,
+      isMainScreen = false,
+      isUnknown = false,
+      tabIndex = null;
+
   AppRoutePath.register()
-    : isRegisterScreen = true,
+    : isWelcomeScreen = false,
+      isRegisterScreen = true,
       isLoginScreen = false,
       isMainScreen = false,
       isUnknown = false,
       tabIndex = null;
 
   AppRoutePath.login()
-    : isRegisterScreen = false,
+    : isWelcomeScreen = false,
       isLoginScreen = true,
+      isRegisterScreen = false,
       isMainScreen = false,
       isUnknown = false,
       tabIndex = null;
 
   AppRoutePath.home({this.tabIndex = 0})
-    : isRegisterScreen = false,
+    : isWelcomeScreen = false,
+      isRegisterScreen = false,
       isLoginScreen = false,
       isMainScreen = true,
       isUnknown = false;
 
   AppRoutePath.unknown()
-    : isRegisterScreen = false,
+    : isWelcomeScreen = false,
+      isRegisterScreen = false,
       isLoginScreen = false,
       isMainScreen = false,
       isUnknown = true,

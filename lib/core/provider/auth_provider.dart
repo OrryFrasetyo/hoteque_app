@@ -18,6 +18,17 @@ class AuthProvider extends ChangeNotifier {
   Employee? employee;
   String errorMsg = "";
 
+  // Tambahkan metode ini
+  Future<bool> isFirstLaunch() async {
+    return await authRepository.isFirstLaunch();
+  }
+
+  // Tambahkan metode ini
+  Future<void> markFirstLaunchComplete() async {
+    await authRepository.markFirstLaunchComplete();
+    notifyListeners();
+  }
+
   Future<bool> isLogged() async {
     isLoggedIn = await authRepository.isLoggedIn();
     return isLoggedIn;

@@ -6,13 +6,22 @@ import 'package:hoteque_app/core/data/networking/util/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
-  final ApiServices _apiServices;
   final SharedPreferences _sharedPref;
+  final ApiServices _apiServices;
+
+  AuthRepository(this._sharedPref, this._apiServices);
 
   final String stateKey = "state";
   final String employeeKey = "employee";
+  final String firstLaunchKey = "first_launch";
 
-  AuthRepository(this._apiServices, this._sharedPref);
+  Future<bool> isFirstLaunch() async {
+    return _sharedPref.getBool(firstLaunchKey) ?? true;
+  }
+
+  Future<void> markFirstLaunchComplete() async {
+    await _sharedPref.setBool(firstLaunchKey, false);
+  }
 
   Future<bool> isLoggedIn() async {
     return _sharedPref.getBool(stateKey) ?? false;
