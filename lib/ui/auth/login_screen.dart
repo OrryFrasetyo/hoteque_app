@@ -94,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         Text(
                           "Login Pegawai",
-                          style: Theme.of(context).textTheme.headlineMedium,
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
 
@@ -158,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return "Mohon masukkan kata sandi Anda";
                             }
                             if (value.length < 6) {
-                              return "Kata sandi harus terdiri dari minimal 6 karakter";
+                              return "Kata sandi harus minimal 6 karakter";
                             }
                             return null;
                           },
@@ -212,7 +213,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                   )
-                                  : Text("MASUK"),
+                                  : Text(
+                                    "MASUK",
+                                    style: TextStyle(
+                                      fontFamily: "Quicksand",
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                         ),
 
                         SizedBox(height: 24.0),

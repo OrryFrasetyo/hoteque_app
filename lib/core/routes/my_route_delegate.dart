@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/routes/app_route_path.dart';
 import 'package:hoteque_app/ui/auth/login_screen.dart';
+import 'package:hoteque_app/ui/auth/register_screen.dart';
 import 'package:hoteque_app/ui/walkgrouth/welcome_screen.dart';
 
 class MyRouteDelegate extends RouterDelegate<AppRoutePath>
@@ -159,11 +160,24 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
             ),
           ),
 
-        // if (_isRegisterScreen)
-        //   MaterialPage(
-        //     key: ValueKey("RegisterScreen"),
-        //     child: child,
-        //     )
+        if (_isRegisterScreen)
+          MaterialPage(
+            key: ValueKey("RegisterScreen"),
+            child: RegisterScreen(
+              onRegister: () {
+                _isLoggedIn = false;
+                _isMainScreen = false;
+                _isRegisterScreen = false;
+                _isLoginScreen = true;
+                notifyListeners();
+              },
+              onLogin: () {
+                _isLoginScreen = true;
+                _isRegisterScreen = false;
+                notifyListeners();
+              },
+            ),
+          ),
 
         // if (_isMainScreen)
         //   MaterialPage(

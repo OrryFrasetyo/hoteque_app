@@ -15,13 +15,13 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("assets/icon/logo-hotelqu.png", height: 120),
+                Image.asset("assets/icon/logo-hotelqu.png", height: 100),
 
-                SizedBox(height: 16),
+                SizedBox(height: 32),
 
                 Text(
                   "Selamat Datang",
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -55,12 +55,11 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        fontFamily: "Quicksand",
                       ),
                     ),
                   ),
                 ),
-
-                Spacer(),
               ],
             ),
           ),

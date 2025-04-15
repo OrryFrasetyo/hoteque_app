@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:hoteque_app/core/data/model/employee.dart';
+import 'package:hoteque_app/core/data/networking/response/position_response.dart';
 import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/response/login_response.dart';
 import 'package:hoteque_app/core/data/networking/util/api_response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
-  static const String _baseUrl = "http://192.168.100.134:3000/api";
+  static const String _baseUrl = "http://192.168.80.233:3000/api";
   final http.Client httpClient;
 
   ApiServices({required this.httpClient});
@@ -55,6 +56,20 @@ class ApiServices {
       } else {
         final errorMsg = json["message"] ?? "Login Failed";
         throw Exception(errorMsg);
+      }
+    });
+  }
+
+  Future<ApiResponse<PositionResponse>> getAllPositions() async {
+    return await executeSafely(() async {
+      final response = await httpClient.get(Uri.parse("$_baseUrl/positions"));
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return PositionResponse.fromJson(json);
+      } else {
+        final message = json["message"] ?? "Failed to fetch positions";
+        throw Exception(message);
       }
     });
   }
