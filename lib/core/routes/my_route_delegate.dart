@@ -3,6 +3,7 @@ import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/routes/app_route_path.dart';
 import 'package:hoteque_app/ui/auth/login_screen.dart';
 import 'package:hoteque_app/ui/auth/register_screen.dart';
+import 'package:hoteque_app/ui/main/main_screen.dart';
 import 'package:hoteque_app/ui/walkgrouth/welcome_screen.dart';
 
 class MyRouteDelegate extends RouterDelegate<AppRoutePath>
@@ -179,10 +180,24 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
             ),
           ),
 
-        // if (_isMainScreen)
-        //   MaterialPage(
-        //     key: ValueKey("MainScreen"),
-        //     child: child)
+        if (_isMainScreen)
+          MaterialPage(
+            key: ValueKey("MainScreen"),
+            child: MainScreen(
+              key: ValueKey("MainScreen"),
+              onLogout: () {
+                _isLoggedIn = false;
+                _isMainScreen = false;
+                _isWelcomeScreen = true;
+                _currentTabIndex = 0; // reset tab index on logout
+                notifyListeners();
+              },
+              currentIndex: _currentTabIndex,
+              onTabChanged: (index) {
+                _currentTabIndex = index;
+              },
+            ),
+          ),
       ],
       onDidRemovePage: (page) {
         if (page.key == ValueKey("RegisterPage")) {
