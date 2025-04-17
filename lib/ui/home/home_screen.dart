@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     textAlign: TextAlign.center,
                   ),
 
-                  SizedBox(height: 16),
+                  SizedBox(height: 16.0),
 
                   ElevatedButton(
                     onPressed: widget.onLogout,
@@ -72,36 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           return RefreshIndicator(
-            onRefresh: () async {},
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  floating: true,
-                  snap: true,
-                  primary: true,
-                  forceElevated: false,
-                  title: Row(
-                    children: [
-                      Image.asset('assets/icon/logo-hotelqu.png', height: 30),
-                      SizedBox(width: 8),
-                      Text(
-                        'Hotelqu',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: IconButton(
-                        icon: Icon(Icons.logout),
-                        onPressed: () => _logOut(authProvider),
-                      ),
-                    ),
-                  ],
-                  elevation: 0,
-                ),
-              ],
+            onRefresh: () async {
+              await authProvider.getEmployee();
+            },
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () => _logOut(authProvider),
+                child: Text("Keluar"),
+              ),
             ),
           );
         },

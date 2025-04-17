@@ -71,31 +71,51 @@ class MainScreen extends StatelessWidget {
               ),
       bottomNavigationBar:
           isMobile
-              ? NavigationBar(
-                selectedIndex: currentIndex,
-                onDestinationSelected: onTabChanged,
-                destinations: [
-                  NavigationDestination(
-                    icon: Icon(Icons.home),
-                    label: "Beranda",
-                    tooltip: "Beranda",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.schedule),
-                    label: "Jadwal",
-                    tooltip: "Jadwal",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.assignment),
-                    label: "Tugas",
-                    tooltip: "Tugas",
-                  ),
-                  NavigationDestination(
-                    icon: Icon(Icons.history),
-                    label: "Riwayat",
-                    tooltip: "Riwayat",
-                  ),
-                ],
+              ? ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12.0),
+                  topRight: Radius.circular(12.0),
+                ),
+                child: NavigationBar(
+                  backgroundColor: Color(0xFF90612D),
+                  selectedIndex: currentIndex,
+                  onDestinationSelected: onTabChanged,
+                  labelBehavior:
+                      NavigationDestinationLabelBehavior.onlyShowSelected,
+                  indicatorColor: Colors.white.withAlpha(20),
+                  destinations: [
+                    NavigationDestination(
+                      icon: Icon(Icons.home, color: Colors.white70),
+                      selectedIcon: Icon(Icons.home, color: Colors.white),
+                      label: "Beranda",
+                      tooltip: "Beranda",
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.schedule, color: Colors.white70),
+                      selectedIcon: Icon(Icons.schedule, color: Colors.white),
+                      label: "Jadwal",
+                      tooltip: "Jadwal",
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.assignment, color: Colors.white70),
+                      selectedIcon: Icon(Icons.assignment, color: Colors.white),
+                      label: "Tugas",
+                      tooltip: "Tugas",
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.history, color: Colors.white70),
+                      selectedIcon: Icon(Icons.history, color: Colors.white),
+                      label: "Riwayat",
+                      tooltip: "Riwayat",
+                    ),
+                  ],
+                  labelTextStyle: WidgetStateProperty.resolveWith((states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return TextStyle(color: Colors.white, fontSize: 12);
+                    }
+                    return TextStyle(color: Colors.white70, fontSize: 12);
+                  }),
+                ),
               )
               : null,
     );

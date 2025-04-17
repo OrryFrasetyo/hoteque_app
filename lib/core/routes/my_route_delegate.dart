@@ -13,10 +13,10 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
   final _mainScreenKey = GlobalKey();
 
   bool _isWelcomeScreen = true;
-  bool _isLoggedIn = false;
   bool _isLoginScreen = false;
   bool _isRegisterScreen = false;
   bool _isMainScreen = false;
+  bool _isLoggedIn = false;
 
   int _currentTabIndex = 0;
 
@@ -101,6 +101,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   void navigateToHome({int tabIndex = 0}) {
     _currentTabIndex = tabIndex;
+    _isWelcomeScreen = false;
     _isLoginScreen = false;
     _isRegisterScreen = false;
     _isMainScreen = true;
@@ -166,10 +167,9 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
             key: ValueKey("RegisterScreen"),
             child: RegisterScreen(
               onRegister: () {
-                _isLoggedIn = false;
-                _isMainScreen = false;
+                _isLoggedIn = true;
+                _isMainScreen = true;
                 _isRegisterScreen = false;
-                _isLoginScreen = true;
                 notifyListeners();
               },
               onLogin: () {
@@ -184,7 +184,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
           MaterialPage(
             key: ValueKey("MainScreen"),
             child: MainScreen(
-              key: ValueKey("MainScreen"),
+              key: _mainScreenKey,
               onLogout: () {
                 _isLoggedIn = false;
                 _isMainScreen = false;
@@ -195,6 +195,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
               currentIndex: _currentTabIndex,
               onTabChanged: (index) {
                 _currentTabIndex = index;
+                notifyListeners();
               },
             ),
           ),
@@ -251,7 +252,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
           _currentTabIndex = path.tabIndex!;
         }
       } else {
-        // if not logged in, go to welcome scren
+        // if not logged in, go to welcome screen
         _isWelcomeScreen = true;
         _isLoginScreen = false;
         _isRegisterScreen = false;

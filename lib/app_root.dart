@@ -27,14 +27,14 @@ class AppRoot extends StatelessWidget {
               (context) =>
                   AuthRepository(sharedPrefs, context.read<ApiServices>()),
         ),
+        Provider(
+          create: (context) => PositionRepository(context.read<ApiServices>()),
+        ),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(context.read<AuthRepository>()),
         ),
         ChangeNotifierProvider(
           create: (context) => MyRouteDelegate(context.read<AuthProvider>()),
-        ),
-        Provider(
-          create: (context) => PositionRepository(context.read<ApiServices>()),
         ),
         ChangeNotifierProvider(
           create: (context) => PositionProvider(context.read<PositionRepository>()),

@@ -6,7 +6,7 @@ class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("Schedule Screen"),
+      body: Center(child: Text("Schedule Screen")),
     );
   }
 }

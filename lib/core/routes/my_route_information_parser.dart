@@ -9,7 +9,7 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
     final uri = Uri.parse(routeInformation.uri.toString());
 
     if (uri.pathSegments.isEmpty) {
-      return AppRoutePath.unknown();
+      return AppRoutePath.home();
     }
 
     if (uri.pathSegments.first == 'welcome') {
@@ -25,7 +25,19 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
     }
 
     if (uri.pathSegments.first == 'home') {
-      return AppRoutePath.home(tabIndex: 0);
+      return AppRoutePath.home();
+    }
+
+    if (uri.pathSegments.first == 'schedule') {
+      return AppRoutePath.home(tabIndex: 1);
+    }
+
+    if (uri.pathSegments.first == 'task') {
+      return AppRoutePath.home(tabIndex: 2);
+    }
+
+    if (uri.pathSegments.first == 'history') {
+      return AppRoutePath.home(tabIndex: 3);
     }
 
     return AppRoutePath.unknown();
@@ -55,7 +67,17 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
         return RouteInformation(uri: Uri.parse("/home"));
       }
 
-      /// tambahkan route untuk tab lainnya jika ada
+      if (tabIndex == 1) {
+        return RouteInformation(uri: Uri.parse("/schedule"));
+      }
+
+      if (tabIndex == 2) {
+        return RouteInformation(uri: Uri.parse("/task"));
+      }
+
+      if (tabIndex == 3) {
+        return RouteInformation(uri: Uri.parse("/history"));
+      }
     }
     return RouteInformation(uri: Uri.parse("/"));
   }

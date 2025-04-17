@@ -6,7 +6,7 @@ class TaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("Task Screen"),
+      body: Center(child: Text("Task Screen")),
     );
   }
 }
