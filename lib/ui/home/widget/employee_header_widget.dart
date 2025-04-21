@@ -7,7 +7,7 @@ class EmployeeHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 220,
+      height: 180,
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -17,8 +17,8 @@ class EmployeeHeaderWidget extends StatelessWidget {
           stops: [0.0, 1.0],
         ),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
         ),
       ),
       child: Column(
@@ -40,7 +40,11 @@ class EmployeeHeaderWidget extends StatelessWidget {
                     ),
                     Text(
                       'Commis Chef - Hotelqu_',
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),

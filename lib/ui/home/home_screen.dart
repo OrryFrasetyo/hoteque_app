@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
+import 'package:hoteque_app/ui/home/widget/attendance_history_item_widget.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
+import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
+import 'package:hoteque_app/ui/home/widget/today_schedule_card_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -76,24 +79,86 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
-                  Stack(
-                    children: [
-                      EmployeeHeaderWidget(),
-
-                      // Card absensi
-                      Positioned(
-                        // Atur sesuai tinggi header
-                        top: 110,
-                        left: 8,
-                        right: 8,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: AttendanceCardWidget(),
+                  SizedBox(
+                    height: 220, // Tinggi total dari header + card + spacing
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned.fill(child: EmployeeHeaderWidget()),
+                        Positioned(
+                          top: 160, // posisi card agar tidak menutupi header
+                          left: 16,
+                          right: 16,
+                          child: Transform.translate(
+                            offset: Offset(0, -40),
+                            child: AttendanceCardWidget(),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(height: 100),
+                  MonthlyAttendanceRecapWidget(),
+                  SizedBox(height: 16),
+                  TodayScheduleCardWidget(
+                    title: "Shift Reguler",
+                    time: "08.00 WIB - 16.00 WIB",
+                    icon: Icons.work_history,
+                  ),
+                  SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Riwayat Absensi",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // Placeholder: Aksi lihat semua nanti ditambahkan
+                          },
+                          child: const Text(
+                            "Lihat Semua",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.brown,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12),
+
+                  AttendanceHistoryItemWidget(
+                    date: DateTime(2025, 2, 5),
+                    checkInTime: "14.55",
+                    checkOutTime: "22.05",
+                    checkInStatus: "Tepat Waktu",
+                    checkOutStatus: "Tepat Waktu",
+                  ),
+                  AttendanceHistoryItemWidget(
+                    date: DateTime(2025, 2, 4),
+                    checkInTime: "08:59",
+                    checkOutTime: "16:15",
+                    checkInStatus: "Terlambat",
+                    checkOutStatus: "Tepat Waktu",
+                  ),
+                  AttendanceHistoryItemWidget(
+                    date: DateTime(2025, 2, 3),
+                    checkInTime: "07:59",
+                    checkOutTime: "16:15",
+                    checkInStatus: "Tepat Waktu",
+                    checkOutStatus: "Tepat Waktu",
+                  ),
+
+                  SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => _logOut(authProvider),
                     child: const Text("Keluar"),

@@ -5,56 +5,75 @@ class AttendanceCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "Rabu, 3 Februari 2025",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Color(0xFFAA8E4E),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Rabu, 3 Februari 2025",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: Colors.white,
                 ),
-                Text("08:30", style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                _TimeItem(
-                  title: 'Hadir',
-                  icon: Icons.access_time,
-                  time: '--:--',
+              ),
+              Text(
+                "08:30",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.white,
                 ),
-                _TimeItem(title: 'Pulang', icon: Icons.logout, time: '--:--'),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF86572D),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _TimeItem(
+                title: 'Hadir',
+                icon: Icons.access_time_filled,
+                time: '--:--',
+              ),
+              _TimeItem(
+                title: 'Pulang',
+                icon: Icons.access_time_filled,
+                time: '--:--',
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF86572D),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text("Rekam Hadir"),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: const Text(
+                "Rekam Hadir",
+                style: TextStyle(
+                  fontFamily: 'Quicksand',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -73,12 +92,31 @@ class _TimeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        Icon(icon, size: 36),
-        const SizedBox(height: 4),
-        Text(title),
-        Text(time, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Icon(icon, size: 48, color: Colors.white),
+        const SizedBox(width: 8),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              time,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
