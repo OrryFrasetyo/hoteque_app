@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
+import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
+import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,11 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _initData() async {
     final authProvider = context.read<AuthProvider>();
     await authProvider.getEmployee();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -75,10 +72,33 @@ class _HomeScreenState extends State<HomeScreen> {
             onRefresh: () async {
               await authProvider.getEmployee();
             },
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () => _logOut(authProvider),
-                child: Text("Keluar"),
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      EmployeeHeaderWidget(),
+
+                      // Card absensi
+                      Positioned(
+                        // Atur sesuai tinggi header
+                        top: 110,
+                        left: 8,
+                        right: 8,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: AttendanceCardWidget(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 100),
+                  ElevatedButton(
+                    onPressed: () => _logOut(authProvider),
+                    child: const Text("Keluar"),
+                  ),
+                ],
               ),
             ),
           );

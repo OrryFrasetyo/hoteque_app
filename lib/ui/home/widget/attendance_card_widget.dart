@@ -1,125 +1,84 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class AttendanceCardWidget extends StatelessWidget {
   const AttendanceCardWidget({super.key});
 
-  // String _getFormattedDate() {
-  //   final now = DateTime.now();
-  //   final formatter = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
-  //   return formatter.format(now);
-  // }
-
-  // String _getFormattedTime() {
-  //   final now = DateTime.now();
-  //   final formatter = DateFormat('HH:mm');
-  //   return formatter.format(now);
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Color(0xFFA67C52),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Rabu, 3 Februari 2025",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+    return Material(
+
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  "Rabu, 3 Februari 2025",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-              Text(
-                "08:30",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: _buildAttendanceStatus(
-                  "Hadir",
-                  Icons.access_time,
-                  "--:--",
-                ),
-              ),
-              Container(
-                height: 70,
-                width: 1,
-                color: Colors.white30,
-                margin: EdgeInsets.symmetric(horizontal: 8),
-              ),
-              Expanded(
-                child: _buildAttendanceStatus(
-                  "Pulang",
-                  Icons.access_time,
-                  "--:--",
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {},
-            child: Text(
-              "Rekam Hadir",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text("08:30", style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
             ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.brown,
-              minimumSize: Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: const [
+                _TimeItem(
+                  title: 'Hadir',
+                  icon: Icons.access_time,
+                  time: '--:--',
+                ),
+                _TimeItem(title: 'Pulang', icon: Icons.logout, time: '--:--'),
+              ],
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF86572D),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                child: const Text("Rekam Hadir"),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+}
 
-  Widget _buildAttendanceStatus(String title, IconData icon, String time) {
+class _TimeItem extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final String time;
+
+  const _TimeItem({
+    required this.title,
+    required this.icon,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
-          ),
-        ),
-        SizedBox(height: 8),
-        CircleAvatar(
-          radius: 24,
-          backgroundColor: Colors.white,
-          child: Icon(icon, color: Colors.brown),
-        ),
-        SizedBox(height: 8),
-        Text(time, style: TextStyle(fontSize: 14, color: Colors.white)),
+        Icon(icon, size: 36),
+        const SizedBox(height: 4),
+        Text(title),
+        Text(time, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }

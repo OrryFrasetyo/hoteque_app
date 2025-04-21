@@ -1,64 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/data/model/employee.dart';
 
-class UserHeaderWidget extends StatelessWidget {
-  final Employee employee;
-
-  const UserHeaderWidget({super.key, required this.employee});
+class EmployeeHeaderWidget extends StatelessWidget {
+  const EmployeeHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
       width: double.infinity,
+      height: 220,
+      padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
+          colors: [Color(0xFFA87640), Color(0xFF594023)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           stops: [0.0, 1.0],
-          colors: [Color(0xFF90612D), Color(0xFF2A1C0D)],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20),
           bottomRight: Radius.circular(20),
         ),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Halo, Jepry',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+      child: Column(
+        children: [
+          SizedBox(height: 20.0),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Halo, Maxwell',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        "Room Attendant - Hotelqu",
-                        style: TextStyle(fontSize: 14, color: Colors.white70),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      'Commis Chef - Hotelqu_',
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                  ],
                 ),
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/icon/logo-hotelqu.png'),
+              ),
+              CircleAvatar(
+                radius: 32,
+                backgroundImage: NetworkImage(
+                  'https://i.pravatar.cc/150?img=65',
                 ),
-              ],
-            ),
-            SizedBox(height: 50.0),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
