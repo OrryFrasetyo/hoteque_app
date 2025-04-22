@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -98,7 +99,14 @@ class ProfileScreen extends StatelessWidget {
                 right: 0,
                 child: Center(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EditProfileScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF8B5E3C),
                       shape: RoundedRectangleBorder(
