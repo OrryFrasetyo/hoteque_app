@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
-import 'package:hoteque_app/ui/home/widget/attendance_history_item_widget.dart';
+import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
+import 'package:hoteque_app/ui/widget/attendance_history_item_widget.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_card_widget.dart';
@@ -99,7 +100,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 100),
                   MonthlyAttendanceRecapWidget(),
-                  SizedBox(height: 16),
+                  SizedBox(height: 12),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Jam Kerja Hari Ini",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12.0),
                   TodayScheduleCardWidget(
                     title: "Shift Reguler",
                     time: "08.00 WIB - 16.00 WIB",
@@ -120,7 +135,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Placeholder: Aksi lihat semua nanti ditambahkan
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PresenceHistoryScreen(),
+                              ),
+                            );
                           },
                           child: const Text(
                             "Lihat Semua",
