@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/ui/profile/profile_screen.dart';
 
 class EmployeeHeaderWidget extends StatelessWidget {
   const EmployeeHeaderWidget({super.key});
@@ -49,10 +50,18 @@ class EmployeeHeaderWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              CircleAvatar(
-                radius: 32,
-                backgroundImage: NetworkImage(
-                  'https://i.pravatar.cc/150?img=65',
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ProfileScreen()),
+                  );
+                },
+                child: CircleAvatar(
+                  radius: 32,
+                  backgroundImage: NetworkImage(
+                    'https://i.pravatar.cc/150?img=65',
+                  ),
                 ),
               ),
             ],
