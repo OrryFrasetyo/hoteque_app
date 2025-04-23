@@ -7,6 +7,5 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting("id_ID", null);
   final sharedPrefs = await SharedPreferences.getInstance();
-
   runApp(AppRoot(sharedPrefs: sharedPrefs));
 }

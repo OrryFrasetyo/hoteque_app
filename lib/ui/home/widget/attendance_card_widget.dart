@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/ui/presence/presence_history_now_screen.dart';
 
 class AttendanceCardWidget extends StatelessWidget {
   const AttendanceCardWidget({super.key});
@@ -55,7 +56,27 @@ class AttendanceCardWidget extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                try {
+                  debugPrint("Rekam Hadir Ditekan");
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PresenceHistoryNowScreen(),
+                    ),
+                  );
+                } catch (e) {
+                  debugPrint("Error saat navigasi: $e");
+                  // Alternatif navigasi jika cara pertama gagal
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder:
+                          (context, animation, secondaryAnimation) =>
+                              PresenceHistoryNowScreen(),
+                    ),
+                  );
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF86572D),
                 shape: RoundedRectangleBorder(
@@ -63,7 +84,7 @@ class AttendanceCardWidget extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              child: const Text(
+              child: Text(
                 "Rekam Hadir",
                 style: TextStyle(
                   fontFamily: 'Quicksand',

@@ -31,6 +31,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _refreshHome() async {
+    final authProvider = context.read<AuthProvider>();
+    await authProvider.getEmployee();
+  }
+
+  void _logOut(AuthProvider authProvider) async {
+    await authProvider.logout();
+    widget.onLogout();
+    if (mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Keluar Akun Berhasil")));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<AuthProvider>(
@@ -81,18 +101,22 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 220, // Tinggi total dari header + card + spacing
+                    height: 220, 
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
                         Positioned.fill(child: EmployeeHeaderWidget()),
                         Positioned(
-                          top: 160, // posisi card agar tidak menutupi header
+                          top: 160,
                           left: 16,
                           right: 16,
-                          child: Transform.translate(
-                            offset: Offset(0, -40),
-                            child: AttendanceCardWidget(),
+                          child: Builder(
+                            builder:
+                                (context) => Transform.translate(
+                                  offset: Offset(0, -40),
+                                  child: AttendanceCardWidget(),
+                                  
+                                ),
                           ),
                         ),
                       ],
@@ -192,13 +216,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _logOut(AuthProvider authProvider) async {
-    await authProvider.logout();
-    widget.onLogout();
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Keluar Akun Berhasil")));
-    }
-  }
+  
 }

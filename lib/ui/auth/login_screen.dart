@@ -213,13 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                   )
-                                  : Text(
-                                    "MASUK",
-                                    style: TextStyle(
-                                      fontFamily: "Quicksand",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  : Text("MASUK"),
                         ),
 
                         SizedBox(height: 24.0),
