@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/repository/position_repository.dart';
+import 'package:hoteque_app/core/data/repository/profile_repository.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position_provider.dart';
+import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/my_app.dart';
 import 'package:http/http.dart' as http;
@@ -30,6 +32,9 @@ class AppRoot extends StatelessWidget {
         Provider(
           create: (context) => PositionRepository(context.read<ApiServices>()),
         ),
+        Provider(
+          create: (context) => ProfileRepository(context.read<ApiServices>()),
+        ),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(context.read<AuthRepository>()),
         ),
@@ -39,7 +44,9 @@ class AppRoot extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => PositionProvider(context.read<PositionRepository>()),
         ),
-        
+        ChangeNotifierProvider(
+          create: (context) => ProfileProvider(context.read<ProfileRepository>()),
+        ),
       ],
       child: MyApp(),
     );

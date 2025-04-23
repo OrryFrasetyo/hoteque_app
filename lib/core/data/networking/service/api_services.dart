@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hoteque_app/core/data/model/employee.dart';
+import 'package:hoteque_app/core/data/networking/response/get_profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/position_response.dart';
 import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/response/login_response.dart';
@@ -72,6 +73,29 @@ class ApiServices {
         final message = json["message"] ?? "Failed to fetch positions";
         throw Exception(message);
       }
+    });
+  }
+
+  Future<ApiResponse<GetProfileEmployeeResponse>> getProfile({
+    required Employee employee,
+  }) async {
+    return await executeSafely(() async {
+      final uri = Uri.parse("$_baseUrl/user");
+      final response = await httpClient.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return GetProfileEmployeeResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+          'Failed to get data employee. Status code: ${response.statusCode}',
+        );
+      } 
     });
   }
 }

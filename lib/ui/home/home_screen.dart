@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
+import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
 import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
 import 'package:hoteque_app/ui/widget/attendance_history_item_widget.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isInitialized = false;
   @override
   void initState() {
     super.initState();
@@ -26,8 +28,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _initData() async {
+    if (_isInitialized) return;
+    _isInitialized = true;
+
+    if (!mounted) return;
     final authProvider = context.read<AuthProvider>();
     await authProvider.getEmployee();
+
+    // Pastikan employee sudah dimuat dan token tersedia sebelum memuat profil
+    if (authProvider.employee != null && authProvider.employee!.token != null) {
+      // Jika widget masih mounted, lanjutkan dengan memuat profil
+      if (mounted) {
+        final profileProvider = context.read<ProfileProvider>();
+        await profileProvider.getProfile(employee: authProvider.employee!);
+      }
+    }
   }
 
   @override
@@ -35,12 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _refreshHome() async {
+  Future <void> _refreshHome() async {
     final authProvider = context.read<AuthProvider>();
     await authProvider.getEmployee();
+
+    // Refresh profile jika employee valid
+    if (authProvider.employee != null && authProvider.employee!.token != null) {
+      final profileProvider = context.read<ProfileProvider>();
+      await profileProvider.getProfile(employee: authProvider.employee!);
+    }
   }
 
   void _logOut(AuthProvider authProvider) async {
+    // Reset ProfileProvider saat logout
+    context.read<ProfileProvider>().resetState();
     await authProvider.logout();
     widget.onLogout();
     if (mounted) {
@@ -53,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<AuthProvider>(
-        builder: (context, authProvider, child) {
+      body: Consumer2<AuthProvider, ProfileProvider>(
+        builder: (context, authProvider, profileProvider, child) {
           //loading state
           if (authProvider.isLoadingLogin) {
             return Center(child: CircularProgressIndicator());
@@ -67,15 +90,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Colors.red),
-
                   SizedBox(height: 16),
-
                   Text(
                     "Error : ${authProvider.errorMsg}",
                     style: TextStyle(fontSize: 16.0),
                     textAlign: TextAlign.center,
                   ),
-
                   SizedBox(height: 16.0),
 
                   ElevatedButton(
@@ -93,15 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           return RefreshIndicator(
-            onRefresh: () async {
-              await authProvider.getEmployee();
-            },
+            onRefresh: () => _refreshHome(),
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   SizedBox(
-                    height: 220, 
+                    height: 220,
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -115,7 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 (context) => Transform.translate(
                                   offset: Offset(0, -40),
                                   child: AttendanceCardWidget(),
-                                  
                                 ),
                           ),
                         ),
@@ -166,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             "Lihat Semua",
                             style: TextStyle(
                               fontSize: 12,
@@ -205,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => _logOut(authProvider),
-                    child: const Text("Keluar"),
+                    child: Text("Keluar"),
                   ),
                 ],
               ),
@@ -215,6 +232,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  
 }
