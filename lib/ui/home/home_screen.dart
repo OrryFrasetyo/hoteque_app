@@ -33,7 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (!mounted) return;
     final authProvider = context.read<AuthProvider>();
-    await authProvider.getEmployee();
+
+    // Tambahkan kondisi untuk mengecek jika data sudah ada
+    if (authProvider.employee == null) {
+      await authProvider.getEmployee();
+    }
 
     // Pastikan employee sudah dimuat dan token tersedia sebelum memuat profil
     if (authProvider.employee != null && authProvider.employee!.token != null) {
@@ -50,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future <void> _refreshHome() async {
+  Future<void> _refreshHome() async {
     final authProvider = context.read<AuthProvider>();
     await authProvider.getEmployee();
 

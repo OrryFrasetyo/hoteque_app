@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/get_profile_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/service/api_config.dart';
 import 'package:hoteque_app/core/data/networking/states/get_profile_result_state.dart';
 import 'package:hoteque_app/core/data/repository/profile_repository.dart';
 
@@ -34,6 +35,16 @@ class ProfileProvider extends ChangeNotifier {
   String get errorMessage => _state is ProfileErrorState 
       ? (_state as ProfileErrorState).message 
       : '';
+
+  // Helper untuk mendapatkan URL foto yang lengkap
+  String get photoUrl {
+    if (_profile?.photo == null || _profile!.photo.toString().isEmpty) {
+      return ""; // atau URL gambar default
+    }
+    
+    final photo = _profile!.photo.toString();
+    return ApiConfig.getImageUrl(photo);
+  }
 
   Future<void> getProfile({required Employee employee}) async {
     _state = ProfileLoadingState();

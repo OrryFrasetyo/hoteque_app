@@ -40,6 +40,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return AppRoutePath.home(tabIndex: 3);
     }
 
+    if (uri.pathSegments.first == 'profile') {
+      return AppRoutePath.profile();
+    }
+
     return AppRoutePath.unknown();
   }
 
@@ -78,6 +82,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       if (tabIndex == 3) {
         return RouteInformation(uri: Uri.parse("/history"));
       }
+    }
+
+    if (configuration.isProfileScreen) {
+      return RouteInformation(uri: Uri.parse("/profile"));
     }
     return RouteInformation(uri: Uri.parse("/"));
   }

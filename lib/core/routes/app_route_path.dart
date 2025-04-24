@@ -5,12 +5,14 @@ class AppRoutePath {
   final bool isMainScreen;
   final bool isUnknown;
   final int? tabIndex;
+  final bool isProfileScreen;
 
   AppRoutePath.welcome()
     : isWelcomeScreen = true,
       isLoginScreen = false,
       isRegisterScreen = false,
       isMainScreen = false,
+      isProfileScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -19,6 +21,7 @@ class AppRoutePath {
       isRegisterScreen = true,
       isLoginScreen = false,
       isMainScreen = false,
+      isProfileScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -27,6 +30,7 @@ class AppRoutePath {
       isLoginScreen = true,
       isRegisterScreen = false,
       isMainScreen = false,
+      isProfileScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -35,6 +39,7 @@ class AppRoutePath {
       isRegisterScreen = false,
       isLoginScreen = false,
       isMainScreen = true,
+      isProfileScreen = false,
       isUnknown = false;
 
   AppRoutePath.unknown()
@@ -42,6 +47,16 @@ class AppRoutePath {
       isRegisterScreen = false,
       isLoginScreen = false,
       isMainScreen = false,
+      isProfileScreen = false,
       isUnknown = true,
+      tabIndex = null;
+
+  AppRoutePath.profile()
+    : isWelcomeScreen = false,
+      isRegisterScreen = false,
+      isLoginScreen = false,
+      isMainScreen = false,
+      isProfileScreen = true,
+      isUnknown = false,
       tabIndex = null;
 }
