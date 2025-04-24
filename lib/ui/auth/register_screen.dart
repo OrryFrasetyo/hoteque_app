@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/model/position.dart';
+import 'package:hoteque_app/core/data/networking/states/position_result_state.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position_provider.dart';
 import 'package:hoteque_app/core/style/theme.dart';
@@ -88,6 +89,148 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
     }
+  }
+
+  void _showPositionSearchDialog() {
+    _searchController.text = "";
+
+    // Reset state jika perlu
+    context.read<PositionProvider>().resetState();
+
+    // Muat data posisi
+    context.read<PositionProvider>().getAllPositions();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Pilih Posisi / Jabatan'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Cari jabatan...',
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          // Update search query
+                        });
+                      },
+                    ),
+                    SizedBox(height: 12),
+                    Flexible(
+                      child: Consumer<PositionProvider>(
+                        builder: (context, provider, child) {
+                          return Builder(
+                            builder: (context) {
+                              final state = provider.state;
+
+                              // Handle different states
+                              if (state is PositionInitialState) {
+                                return Center(
+                                  child: Text("Memuat data jabatan..."),
+                                );
+                              } else if (state is PositionLoadingState) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (state is PositionErrorState) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.error_outline,
+                                        color: Colors.red,
+                                        size: 48,
+                                      ),
+                                      SizedBox(height: 16),
+                                      Text(
+                                        state.message,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 16),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          provider.getAllPositions();
+                                        },
+                                        child: Text("Coba Lagi"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else if (state is PositionLoadedState) {
+                                final filteredPositions = provider
+                                    .searchPositions(_searchController.text);
+
+                                if (filteredPositions.isEmpty) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.search_off,
+                                          color: Colors.grey,
+                                          size: 48,
+                                        ),
+                                        SizedBox(height: 16),
+                                        Text("Jabatan tidak ditemukan"),
+                                      ],
+                                    ),
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: filteredPositions.length,
+                                  itemBuilder: (context, index) {
+                                    final position = filteredPositions[index];
+                                    return ListTile(
+                                      title: Text(position.positionName),
+                                      subtitle: Text(position.departmentName),
+                                      onTap: () {
+                                        _selectedPosition = position;
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+
+                              // Fallback jika terjadi state yang tidak dihandle
+                              return Center(child: Text("Terjadi kesalahan"));
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('BATAL'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) {
+      // Trigger rebuild untuk memperbarui UI dengan posisi yang dipilih
+      setState(() {});
+    });
   }
 
   @override
@@ -220,6 +363,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // Posisi/Jabatan Input dengan Button yang membuka dialog
                     InkWell(
                       onTap: _showPositionSearchDialog,
+                      borderRadius: BorderRadius.circular(12.0),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 16,
@@ -257,7 +401,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(height: 24.0),
 
                     Consumer<AuthProvider>(
@@ -282,7 +426,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   : Text(
                                     "DAFTAR",
                                     style: TextStyle(
-                                      fontFamily: "Quicksand",
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -317,93 +460,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
-  }
-
-  // Metode untuk menampilkan dialog pencarian posisi
-  void _showPositionSearchDialog() {
-    _searchController.text = "";
-    _searchQuery = "''";
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text('Pilih Posisi / Jabatan'),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Cari jabatan...',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchQuery = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 12),
-                    Flexible(
-                      child: Consumer<PositionProvider>(
-                        builder: (context, positionProvider, child) {
-                          if (positionProvider.isLoading) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-
-                          final filteredPositions = positionProvider
-                              .searchPositions(_searchQuery);
-
-                          if (filteredPositions.isEmpty) {
-                            return Center(
-                              child: Text("Jabatan tidak ditemukan"),
-                            );
-                          }
-
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: filteredPositions.length,
-                            itemBuilder: (context, index) {
-                              final position = filteredPositions[index];
-                              return ListTile(
-                                title: Text(position.positionName),
-                                subtitle: Text(position.departmentName),
-                                onTap: () {
-                                  setState(() {
-                                    _selectedPosition = position;
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('BATAL'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    ).then((_) {
-      // Trigger rebuild setelah dialog ditutup
-      setState(() {});
-    });
   }
 }

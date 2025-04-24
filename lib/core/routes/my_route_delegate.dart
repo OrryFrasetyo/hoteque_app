@@ -207,8 +207,9 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
             key: ValueKey("RegisterScreen"),
             child: RegisterScreen(
               onRegister: () {
-                _isLoggedIn = true;
-                _isMainScreen = true;
+                // _isLoggedIn = true;
+                // _isMainScreen = true;
+                _isLoginScreen = true;
                 _isRegisterScreen = false;
                 notifyListeners();
               },
