@@ -1,12 +1,51 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   final VoidCallback onBack;
-  const ProfileScreen({super.key, required this.onBack});
+  final VoidCallback onLogout;
+  const ProfileScreen({super.key, required this.onBack, required this.onLogout});
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Keluar Akun'),
+          content: Text('Apakah Anda yakin ingin keluar dari akun ini?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context); 
+                
+                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                
+                Provider.of<ProfileProvider>(context, listen: false).resetState();
+                
+                await authProvider.logout();
+
+                if (!context.mounted) return;
+                onLogout(); 
+                
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Keluar Akun Berhasil"))
+                );
+              },
+              child: const Text('Keluar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +79,6 @@ class ProfileScreen extends StatelessWidget {
                                 Icons.arrow_back,
                                 color: Colors.white,
                               ),
-                              // onPressed: () {
-                              //   // Menggunakan router delegate untuk kembali ke main screen
-                              //   final routerDelegate = Router.of(context).routerDelegate;
-                              //   if (routerDelegate is MyRouteDelegate) {
-                              //     routerDelegate.navigateToHome();
-                              //   }
-                              // },
                               onPressed: onBack,
                             ),
                             Expanded(
@@ -184,6 +216,7 @@ class ProfileScreen extends StatelessWidget {
                       icon: Icons.logout,
                       title: 'Keluar',
                       trailing: Icon(Icons.arrow_forward_ios, size: 14),
+                      onTap: () => _showLogoutDialog(context),
                     ),
                   ],
                 ),
@@ -194,6 +227,8 @@ class ProfileScreen extends StatelessWidget {
       },
     );
   }
+
+
 
   // Widget untuk menampilkan avatar profil dengan handling null
   Widget _buildProfileAvatar(ProfileProvider provider) {
@@ -232,25 +267,31 @@ class ProfileScreen extends StatelessWidget {
     required IconData icon,
     required String title,
     required Widget trailing,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE9DCCB),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.brown),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE9DCCB),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.brown),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          trailing,
-        ],
+            trailing,
+          ],
+        ),
       ),
     );
   }

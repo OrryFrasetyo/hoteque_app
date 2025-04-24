@@ -44,7 +44,6 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isLoginScreen = false;
       _isProfileScreen = false;
     } else {
-      // Set welcome screen sebagai layar awal jika belum login
       _isWelcomeScreen = true;
       _isRegisterScreen = false;
       _isLoginScreen = false;
@@ -79,24 +78,10 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     } else {
       return AppRoutePath.unknown();
     }
-
-    // if (_isLoggedIn) {
-    //   return AppRoutePath.home(tabIndex: _currentTabIndex);
-    // } else if (_isWelcomeScreen) {
-    //   return AppRoutePath.welcome();
-    // } else if (_isLoginScreen) {
-    //   return AppRoutePath.login();
-    // } else if (_isRegisterScreen) {
-    //   return AppRoutePath.register();
-    // } else {
-    //   return AppRoutePath.unknown();
-    // }
   }
 
   @override
   Future<bool> popRoute() async {
-
-    // Jika di halaman profile, kembali ke main screen
     if (_isProfileScreen) {
       _isProfileScreen = false;
       _isMainScreen = true;
@@ -104,9 +89,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       return true;
     }
 
-    // back button behavior after logged in
     if (_isLoggedIn && _isMainScreen) {
-      // If we're not on the first tab, go back to first tab instead of exiting
       if (_currentTabIndex != 0) {
         _currentTabIndex = 0;
         notifyListeners();
@@ -115,15 +98,34 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       return false;
     }
 
-    // if on register screen, go back to login screen
     if (_isRegisterScreen) {
       _isRegisterScreen = false;
       _isLoginScreen = true;
       notifyListeners();
       return true;
     }
-    
+
+    if (_isLoginScreen) {
+      _isLoginScreen = false;
+      _isWelcomeScreen = true;
+      notifyListeners();
+      return true;
+    }
+
+    if (_isWelcomeScreen) {
+      return false;
+    }
+
     return false;
+  }
+
+  void handleLogout() {
+    _isLoggedIn = false;
+    _isMainScreen = false;
+    _isProfileScreen = false;
+    _isWelcomeScreen = true;
+    _currentTabIndex = 0;
+    notifyListeners();
   }
 
   void navigateToHome({int tabIndex = 0}) {
@@ -136,7 +138,6 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     notifyListeners();
   }
 
-  // Menambahkan method untuk navigasi ke profile screen
   void navigateToProfile() {
     _isProfileScreen = true;
     _isMainScreen = false;
@@ -150,7 +151,6 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
   Widget build(BuildContext context) {
     bool isCurrentLoggedIn = authProvider.isLoggedIn;
 
-    // if login status changed, update our local state
     if (isCurrentLoggedIn != _isLoggedIn) {
       _isLoggedIn = isCurrentLoggedIn;
       if (_isLoggedIn) {
@@ -225,13 +225,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
             key: ValueKey("MainScreen"),
             child: MainScreen(
               key: _mainScreenKey,
-              onLogout: () {
-                _isLoggedIn = false;
-                _isMainScreen = false;
-                _isWelcomeScreen = true;
-                _currentTabIndex = 0; // reset tab index on logout
-                notifyListeners();
-              },
+              onLogout: handleLogout,
               currentIndex: _currentTabIndex,
               onTabChanged: (index) {
                 _currentTabIndex = index;
@@ -240,7 +234,6 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
             ),
           ),
 
-          // Tambahkan halaman profile jika isProfileScreen true
         if (_isProfileScreen)
           MaterialPage(
             key: ValueKey("ProfileScreen"),
@@ -250,6 +243,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
                 _isMainScreen = true;
                 notifyListeners();
               },
+              onLogout: handleLogout,
             ),
           ),
       ],
@@ -310,7 +304,6 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
           _currentTabIndex = path.tabIndex!;
         }
       } else {
-        // if not logged in, go to welcome screen
         _isWelcomeScreen = true;
         _isLoginScreen = false;
         _isRegisterScreen = false;
@@ -324,7 +317,6 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isMainScreen = false;
         _isProfileScreen = true;
       } else {
-        // if not logged in, go to welcome screen
         _isWelcomeScreen = true;
         _isLoginScreen = false;
         _isRegisterScreen = false;

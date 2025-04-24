@@ -34,14 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
     final authProvider = context.read<AuthProvider>();
 
-    // Tambahkan kondisi untuk mengecek jika data sudah ada
     if (authProvider.employee == null) {
       await authProvider.getEmployee();
     }
 
-    // Pastikan employee sudah dimuat dan token tersedia sebelum memuat profil
     if (authProvider.employee != null && authProvider.employee!.token != null) {
-      // Jika widget masih mounted, lanjutkan dengan memuat profil
       if (mounted) {
         final profileProvider = context.read<ProfileProvider>();
         await profileProvider.getProfile(employee: authProvider.employee!);
@@ -49,31 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Future<void> _refreshHome() async {
     final authProvider = context.read<AuthProvider>();
+    final profileProvider = context.read<ProfileProvider>();
+
     await authProvider.getEmployee();
 
-    // Refresh profile jika employee valid
     if (authProvider.employee != null && authProvider.employee!.token != null) {
-      final profileProvider = context.read<ProfileProvider>();
       await profileProvider.getProfile(employee: authProvider.employee!);
-    }
-  }
-
-  void _logOut(AuthProvider authProvider) async {
-    // Reset ProfileProvider saat logout
-    context.read<ProfileProvider>().resetState();
-    await authProvider.logout();
-    widget.onLogout();
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Keluar Akun Berhasil")));
     }
   }
 
@@ -82,12 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Consumer2<AuthProvider, ProfileProvider>(
         builder: (context, authProvider, profileProvider, child) {
-          //loading state
           if (authProvider.isLoadingLogin) {
             return Center(child: CircularProgressIndicator());
           }
 
-          // error employee state
           if (authProvider.errorMsg.isNotEmpty) {
             return Center(
               child: Column(
@@ -111,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
 
-          // employee not found
           if (authProvider.employee == null) {
             return Center(child: Text("Data Pengguna Tidak Tersedia"));
           }
@@ -221,12 +198,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     checkOutTime: "16:15",
                     checkInStatus: "Tepat Waktu",
                     checkOutStatus: "Tepat Waktu",
-                  ),
-
-                  SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => _logOut(authProvider),
-                    child: Text("Keluar"),
                   ),
                 ],
               ),
