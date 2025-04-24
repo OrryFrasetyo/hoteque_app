@@ -69,6 +69,7 @@ class AuthProvider extends ChangeNotifier {
     final logout = await authRepository.logout();
     if (logout) {
       await authRepository.deleteEmployee();
+      employee = null;
     }
     isLoggedIn = await authRepository.isLoggedIn();
 
