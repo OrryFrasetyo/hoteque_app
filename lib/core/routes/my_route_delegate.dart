@@ -4,6 +4,7 @@ import 'package:hoteque_app/core/routes/app_route_path.dart';
 import 'package:hoteque_app/ui/auth/login_screen.dart';
 import 'package:hoteque_app/ui/auth/register_screen.dart';
 import 'package:hoteque_app/ui/main/main_screen.dart';
+import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 import 'package:hoteque_app/ui/profile/profile_screen.dart';
 import 'package:hoteque_app/ui/walkgrouth/welcome_screen.dart';
 
@@ -18,6 +19,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
   bool _isRegisterScreen = false;
   bool _isMainScreen = false;
   bool _isProfileScreen = false;
+  bool _isEditProfileScreen = false;
   bool _isLoggedIn = false;
 
   int _currentTabIndex = 0;
@@ -82,6 +84,12 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   Future<bool> popRoute() async {
+    if (_isEditProfileScreen) {
+      _isEditProfileScreen = false;
+      _isProfileScreen = true;
+      notifyListeners();
+      return true;
+    }
     if (_isProfileScreen) {
       _isProfileScreen = false;
       _isMainScreen = true;
@@ -144,6 +152,12 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     _isWelcomeScreen = false;
     _isLoginScreen = false;
     _isRegisterScreen = false;
+    notifyListeners();
+  }
+
+  void navigateToEditProfile() {
+    _isEditProfileScreen = true;
+    _isProfileScreen = false;
     notifyListeners();
   }
 
@@ -244,6 +258,12 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
               },
               onLogout: handleLogout,
             ),
+          ),
+
+        if (_isEditProfileScreen)
+          MaterialPage(
+            key: ValueKey("EditProfileScreen"),
+            child: EditProfileScreen(),
           ),
       ],
       onDidRemovePage: (page) {

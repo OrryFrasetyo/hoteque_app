@@ -1,16 +1,16 @@
-class GetProfileEmployeeResponse {
+class ProfileEmployeeResponse {
   final bool error;
   final String message;
   final Profile profile;
 
-  GetProfileEmployeeResponse({
+  ProfileEmployeeResponse({
     required this.error,
     required this.message,
     required this.profile,
   });
 
-  factory GetProfileEmployeeResponse.fromJson(Map<String, dynamic> json) =>
-      GetProfileEmployeeResponse(
+  factory ProfileEmployeeResponse.fromJson(Map<String, dynamic> json) =>
+      ProfileEmployeeResponse(
         error: json["error"],
         message: json["message"],
         profile: Profile.fromJson(json["profile"]),

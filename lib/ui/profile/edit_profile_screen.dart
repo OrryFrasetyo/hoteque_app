@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hoteque_app/core/provider/auth_provider.dart';
+import 'package:hoteque_app/core/provider/update_profile_provider.dart';
+import 'package:hoteque_app/core/style/theme.dart';
+import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -9,11 +14,52 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController(text: "Maxwell");
-  final _passwordController = TextEditingController(text: "************");
-  final _phoneController = TextEditingController(text: "081234567890");
+  late TextEditingController _nameController;
+  late TextEditingController _passwordController;
+  late TextEditingController _phoneController;
+  bool _isInitialized = false;
+  bool _isLoading = true;
 
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _phoneController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeData();
+    });
+  }
+
+  Future<void> _initializeData() async {
+    if (_isInitialized) return;
+
+    final profileProvider = Provider.of<UpdateProfileProvider>(
+      context,
+      listen: false,
+    );
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    setState(() => _isLoading = true);
+
+    if (profileProvider.name.isEmpty) {
+      // Jika profile belum diambil, ambil dulu dari API
+      await profileProvider.getProfile(employee: authProvider.employee!);
+    }
+
+    // Isi data ke text controller
+    _nameController.text = profileProvider.name;
+    _phoneController.text = profileProvider.phone;
+    // Password tidak diisi karena bersifat privasi
+
+    setState(() {
+      _isLoading = false;
+      _isInitialized = true;
+    });
+  }
 
   @override
   void dispose() {
@@ -23,13 +69,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
-      // nanti submit ke backend
-      ScaffoldMessenger.of(
+
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final profileProvider = Provider.of<UpdateProfileProvider>(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Profile disimpan")));
+        listen: false,
+      );
+
+      // Ambil nilai dari controller
+      final name = _nameController.text.trim();
+      final phone = _phoneController.text.trim();
+      final password =
+          _passwordController.text.isEmpty ? null : _passwordController.text;
+
+      // Update profile
+      final success = await profileProvider.updateProfile(
+        employee: authProvider.employee!,
+        name: name,
+        phone: phone,
+        password: password,
+      );
+
+      if (!mounted) return;
+
+      if (success) {
+        // Navigate back and refresh home screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile berhasil diperbarui")),
+        );
+
+        Navigator.pop(
+          context,
+          true,
+        ); // Pass true sebagai indicator untuk refresh
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Gagal memperbarui profile: ${profileProvider.errorMessage}",
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -37,7 +122,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Edit Profile",
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
@@ -47,116 +132,195 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            final profileProvider = Provider.of<UpdateProfileProvider>(
+              context,
+              listen: false,
+            );
+            if (profileProvider.photoFile != null) {
+              profileProvider.resetPhotoFile();
+            }
+            Navigator.pop(context);
+          },
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=65'),
-            ),
-            const SizedBox(height: 32),
+      body:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Consumer2<UpdateProfileProvider, AuthProvider>(
+                builder: (context, profileProvider, authProvider, _) {
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    child: Column(
+                      children: [
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            // Avatar
+                            _buildProfileAvatar(profileProvider),
 
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  _buildInputField(
-                    label: "Nama",
-                    icon: Icons.person_outline,
-                    controller: _nameController,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildInputField(
-                    label: "Password",
-                    icon: Icons.lock_outline,
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    suffix: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() => _obscurePassword = !_obscurePassword);
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildInputField(
-                    label: "No Handphone",
-                    icon: Icons.phone,
-                    controller: _phoneController,
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _submitForm,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF86572D),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                            // Change photo button
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                onPressed: () async {
+                                  await profileProvider.pickImage();
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      child: const Text(
-                        "Simpan",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'QuickSand',
+                        const SizedBox(height: 32),
+
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              TextFormField(
+                                controller: _nameController,
+                                decoration: customInputDecoration(
+                                  label: "Nama Lengkap",
+                                  prefixIcon: Icons.person_outline,
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Mohon masukkan nama Anda";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16.0),
+                              TextFormField(
+                                controller: _passwordController,
+                                decoration: customInputDecoration(
+                                  label: "Password (Optional)",
+                                  prefixIcon: Icons.lock_outline,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscurePassword
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscurePassword = !_obscurePassword;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                obscureText: _obscurePassword,
+                                validator: (value) {
+                                  if (value != null &&
+                                      value.isNotEmpty &&
+                                      value.length < 6) {
+                                    return "Password harus minimal 6 karakter";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16.0),
+                              TextFormField(
+                                controller: _phoneController,
+                                decoration: customInputDecoration(
+                                  label: "No Handphone",
+                                  prefixIcon: Icons.phone,
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Mohon masukkan nomor handphone Anda";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 24),
+                              profileProvider.isUpdating
+                                  ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                  : ElevatedButton(
+                                    onPressed: _submitForm,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF86572D),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      "Simpan",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                            ],
+                          ),
                         ),
-                      ),
+                        // Error message
+                        if (profileProvider.isError)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text(
+                              profileProvider.errorMessage,
+                              style: const TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                      ],
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
-  Widget _buildInputField({
-    required String label,
-    required IconData icon,
-    required TextEditingController controller,
-    bool obscureText = false,
-    Widget? suffix,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: TextFormField(
-            controller: controller,
-            obscureText: obscureText,
-            decoration: InputDecoration(
-              prefixIcon: Icon(icon, color: Colors.brown),
-              suffixIcon: suffix,
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 14,
-              ),
-            ),
-          ),
-        ),
-      ],
+  // Widget untuk menampilkan avatar (foto profil)
+  Widget _buildProfileAvatar(UpdateProfileProvider provider) {
+    // Jika user memilih foto baru, tampilkan itu
+    if (provider.photoFile != null) {
+      return CircleAvatar(
+        radius: 50,
+        backgroundImage: FileImage(provider.photoFile!),
+      );
+    }
+
+    // Jika user punya foto profil yang sudah ada
+    if (provider.hasPhoto) {
+      return CircleAvatar(
+        radius: 50,
+        backgroundColor: const Color(0xFFD2B48C),
+        backgroundImage: NetworkImage(provider.photoUrl),
+        onBackgroundImageError: (exception, stackTrace) {
+          // Handle error loading image
+          print("Error loading profile image: $exception");
+        },
+      );
+    }
+
+    // Jika tidak ada foto, tampilkan ikon person
+    return CircleAvatar(
+      radius: 50,
+      backgroundColor: const Color(0xFFD2B48C),
+      child: Icon(Icons.person, size: 60, color: Colors.white),
     );
   }
 }

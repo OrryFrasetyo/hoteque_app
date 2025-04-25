@@ -31,7 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _searchController = TextEditingController();
   bool _obscurePassword = true;
   Position? _selectedPosition;
-  String _searchQuery = "";
 
   @override
   void initState() {

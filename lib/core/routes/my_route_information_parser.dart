@@ -44,6 +44,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return AppRoutePath.profile();
     }
 
+    if (uri.pathSegments.first == 'edit_profile') {
+      return AppRoutePath.editProfile();
+    }
+
     return AppRoutePath.unknown();
   }
 
@@ -87,6 +91,11 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
     if (configuration.isProfileScreen) {
       return RouteInformation(uri: Uri.parse("/profile"));
     }
+
+    if (configuration.isEditProfileScreen) {
+      return RouteInformation(uri: Uri.parse("/edit_profile"));
+    }
+    
     return RouteInformation(uri: Uri.parse("/"));
   }
 }

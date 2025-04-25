@@ -5,10 +5,39 @@ import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final VoidCallback onBack;
   final VoidCallback onLogout;
-  const ProfileScreen({super.key, required this.onBack, required this.onLogout});
+  const ProfileScreen({
+    super.key,
+    required this.onBack,
+    required this.onLogout,
+  });
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  void _navigateToEditProfile() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => EditProfileScreen()),
+    );
+    
+    if (!mounted) return;
+
+    // Jika hasil true, maka refresh data profil dari API
+    if (result == true) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final profileProvider = Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      );
+
+      await profileProvider.getProfile(employee: authProvider.employee!);
+    }
+  }
 
   void _showLogoutDialog(BuildContext context) {
     showDialog(
@@ -24,20 +53,26 @@ class ProfileScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(context); 
-                
-                final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                
-                Provider.of<ProfileProvider>(context, listen: false).resetState();
-                
+                Navigator.pop(context);
+
+                final authProvider = Provider.of<AuthProvider>(
+                  context,
+                  listen: false,
+                );
+
+                Provider.of<ProfileProvider>(
+                  context,
+                  listen: false,
+                ).resetState();
+
                 await authProvider.logout();
 
                 if (!context.mounted) return;
-                onLogout(); 
-                
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Keluar Akun Berhasil"))
-                );
+                widget.onLogout();
+
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text("Keluar Akun Berhasil")));
               },
               child: const Text('Keluar'),
             ),
@@ -79,7 +114,7 @@ class ProfileScreen extends StatelessWidget {
                                 Icons.arrow_back,
                                 color: Colors.white,
                               ),
-                              onPressed: onBack,
+                              onPressed: widget.onBack,
                             ),
                             Expanded(
                               child: const Text(
@@ -172,14 +207,7 @@ class ProfileScreen extends StatelessWidget {
                     right: 0,
                     child: Center(
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => EditProfileScreen(),
-                            ),
-                          );
-                        },
+                        onPressed: _navigateToEditProfile,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF8B5E3C),
                           shape: RoundedRectangleBorder(
@@ -227,8 +255,6 @@ class ProfileScreen extends StatelessWidget {
       },
     );
   }
-
-
 
   // Widget untuk menampilkan avatar profil dengan handling null
   Widget _buildProfileAvatar(ProfileProvider provider) {

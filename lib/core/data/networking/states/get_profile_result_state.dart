@@ -1,4 +1,4 @@
-import 'package:hoteque_app/core/data/networking/response/get_profile_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 
 sealed class ProfileState {}
 

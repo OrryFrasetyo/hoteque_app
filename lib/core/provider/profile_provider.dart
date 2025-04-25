@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
-import 'package:hoteque_app/core/data/networking/response/get_profile_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/service/api_config.dart';
 import 'package:hoteque_app/core/data/networking/states/get_profile_result_state.dart';
 import 'package:hoteque_app/core/data/repository/profile_repository.dart';
