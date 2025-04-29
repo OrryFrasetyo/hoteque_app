@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TodayScheduleCardWidget extends StatelessWidget {
-  final String title;
+  final String type;
   final String time;
   final IconData icon;
   final Color backgroundColor;
 
   const TodayScheduleCardWidget({
     super.key,
-    required this.title,
+    required this.type,
     required this.time,
     required this.icon,
     this.backgroundColor = const Color(0xFFEFEFEF),
@@ -34,7 +34,7 @@ class TodayScheduleCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            "Shift $type",
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
           SizedBox(height: 6),

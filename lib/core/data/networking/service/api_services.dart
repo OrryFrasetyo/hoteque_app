@@ -5,6 +5,7 @@ import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/position_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/response/schedule/schedule_today_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/response/login_response.dart';
 import 'package:hoteque_app/core/data/networking/util/api_response.dart';
@@ -187,6 +188,29 @@ class ApiServices {
       } else {
         throw Exception(
           'Failed to get schedule. Status code: ${response.statusCode}',
+        );
+      }
+    });
+  }
+
+  Future<ApiResponse<ScheduleTodayEmployeeResponse>> getScheduleNowEmployee({
+    required Employee employee,
+  }) async {
+    return await executeSafely(() async {
+      final uri = Uri.parse("$_baseUrl/schedules/today");
+      final response = await httpClient.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return ScheduleTodayEmployeeResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+          'Failed to get schedule now. Status code: ${response.statusCode}',
         );
       }
     });

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
+import 'package:hoteque_app/ui/home/widget/today_schedule_widget.dart';
 import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
 import 'package:hoteque_app/ui/widget/attendance_history_item_widget.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
-import 'package:hoteque_app/ui/home/widget/today_schedule_card_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,6 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         final profileProvider = context.read<ProfileProvider>();
         await profileProvider.getProfile(employee: authProvider.employee!);
+
+        if (!mounted) return;
+        final scheduleNowProvider = context.read<ScheduleNowProvider>();
+        await scheduleNowProvider.getTodaySchedule(
+          employee: authProvider.employee!,
+        );
       }
     }
   }
@@ -49,11 +56,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _refreshHome() async {
     final authProvider = context.read<AuthProvider>();
     final profileProvider = context.read<ProfileProvider>();
+    final scheduleNowProvider = context.read<ScheduleNowProvider>();
 
     await authProvider.getEmployee();
 
     if (authProvider.employee != null && authProvider.employee!.token != null) {
       await profileProvider.getProfile(employee: authProvider.employee!);
+      await scheduleNowProvider.getTodaySchedule(
+        employee: authProvider.employee!,
+      );
     }
   }
 
@@ -137,11 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(height: 12.0),
-                  TodayScheduleCardWidget(
-                    title: "Shift Reguler",
-                    time: "08.00 WIB - 16.00 WIB",
-                    icon: Icons.work_history,
-                  ),
+                  TodayScheduleWidget(),
                   SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),

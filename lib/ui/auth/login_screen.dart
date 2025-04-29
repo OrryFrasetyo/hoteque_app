@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
 import 'package:hoteque_app/core/style/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';

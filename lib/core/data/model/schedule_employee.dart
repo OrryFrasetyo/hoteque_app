@@ -1,4 +1,4 @@
-import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/response/schedule/schedule.dart';
 
 class ScheduleEmployee {
   final String type;
