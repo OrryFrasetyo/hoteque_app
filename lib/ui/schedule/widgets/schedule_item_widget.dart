@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/data/model/schedule.dart';
+import 'package:hoteque_app/core/data/model/schedule_employee.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleItemWidget extends StatelessWidget {
-  final ScheduleModel schedule;
+  final ScheduleEmployee schedule;
 
   const ScheduleItemWidget({super.key, required this.schedule});
 
@@ -32,7 +32,7 @@ class ScheduleItemWidget extends StatelessWidget {
           Align(
             alignment: Alignment.topRight,
             child: Text(
-              '${dayFormat.format(schedule.date)}, ${dateFormat.format(schedule.date)}',
+              '${dayFormat.format(schedule.dateSchedule)}, ${dateFormat.format(schedule.dateSchedule)}',
               textAlign: TextAlign.right,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
             ),
@@ -52,7 +52,7 @@ class ScheduleItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      schedule.title,
+                      'Shift ${schedule.type}',
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 12.0,

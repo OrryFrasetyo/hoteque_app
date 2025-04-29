@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/repository/position_repository.dart';
 import 'package:hoteque_app/core/data/repository/profile_repository.dart';
+import 'package:hoteque_app/core/data/repository/schedule_repository.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position_provider.dart';
 import 'package:hoteque_app/core/provider/profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
 import 'package:hoteque_app/core/provider/update_profile_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/my_app.dart';
@@ -36,6 +38,9 @@ class AppRoot extends StatelessWidget {
         Provider(
           create: (context) => ProfileRepository(context.read<ApiServices>()),
         ),
+        Provider(
+          create: (context) => ScheduleRepository(context.read<ApiServices>()),
+        ),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(context.read<AuthRepository>()),
         ),
@@ -50,6 +55,9 @@ class AppRoot extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => UpdateProfileProvider(context.read<ProfileRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ScheduleEmployeeProvider(context.read<ScheduleRepository>()),
         ),
       ],
       child: MyApp(),

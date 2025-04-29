@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/position_response.dart';
+import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/response/login_response.dart';
 import 'package:hoteque_app/core/data/networking/util/api_response.dart';
@@ -165,5 +166,29 @@ class ApiServices {
       default:
         return 'jpeg';
     }
+  }
+
+  // schedule api services
+  Future<ApiResponse<ScheduleEmployeeResponse>> getAllScheduleEmployee({
+    required Employee employee,
+  }) async {
+    return await executeSafely(() async {
+      final uri = Uri.parse("$_baseUrl/schedules");
+      final response = await httpClient.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return ScheduleEmployeeResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+          'Failed to get schedule. Status code: ${response.statusCode}',
+        );
+      }
+    });
   }
 }
