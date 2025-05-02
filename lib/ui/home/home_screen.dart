@@ -5,6 +5,7 @@ import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_widget.dart';
 import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
+import 'package:hoteque_app/ui/schedule/schedule_department_employee_screen.dart';
 import 'package:hoteque_app/ui/widget/attendance_history_item_widget.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
@@ -211,6 +212,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF90612D),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ScheduleDepartmentEmployeeScreen(),
+            ),
+          );
+        },
+        child: Icon(Icons.calendar_month, color: Colors.white),
       ),
     );
   }
