@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/routes/app_route_path.dart';
 import 'package:hoteque_app/ui/auth/login_screen.dart';
@@ -6,6 +7,7 @@ import 'package:hoteque_app/ui/auth/register_screen.dart';
 import 'package:hoteque_app/ui/main/main_screen.dart';
 import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 import 'package:hoteque_app/ui/profile/profile_screen.dart';
+import 'package:hoteque_app/ui/schedule/schedule_employee_screen.dart';
 import 'package:hoteque_app/ui/walkgrouth/welcome_screen.dart';
 
 class MyRouteDelegate extends RouterDelegate<AppRoutePath>
@@ -20,7 +22,10 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
   bool _isMainScreen = false;
   bool _isProfileScreen = false;
   bool _isEditProfileScreen = false;
+  bool _isScheduleEmployeeScreen = false;
   bool _isLoggedIn = false;
+
+  Employee? _currentEmployee;
 
   int _currentTabIndex = 0;
 
@@ -39,18 +44,21 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isRegisterScreen = false;
       _isMainScreen = false;
       _isProfileScreen = false;
+      _isScheduleEmployeeScreen = false;
     } else if (_isLoggedIn) {
       _isWelcomeScreen = false;
       _isMainScreen = true;
       _isRegisterScreen = false;
       _isLoginScreen = false;
       _isProfileScreen = false;
+      _isScheduleEmployeeScreen = false;
     } else {
       _isWelcomeScreen = true;
       _isRegisterScreen = false;
       _isLoginScreen = false;
       _isMainScreen = false;
       _isProfileScreen = false;
+      _isScheduleEmployeeScreen = false;
     }
     notifyListeners();
   }
@@ -67,7 +75,9 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   AppRoutePath get currentConfiguration {
-    if (_isProfileScreen) {
+    if (_isScheduleEmployeeScreen) {
+      return AppRoutePath.scheduleEmployee();
+    } else if (_isProfileScreen) {
       return AppRoutePath.profile();
     } else if (_isLoggedIn && _isMainScreen) {
       return AppRoutePath.home(tabIndex: _currentTabIndex);
@@ -84,12 +94,20 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   Future<bool> popRoute() async {
+    if (_isScheduleEmployeeScreen) {
+      _isScheduleEmployeeScreen = false;
+      _isMainScreen = true;
+      notifyListeners();
+      return true;
+    }
+
     if (_isEditProfileScreen) {
       _isEditProfileScreen = false;
       _isProfileScreen = true;
       notifyListeners();
       return true;
     }
+
     if (_isProfileScreen) {
       _isProfileScreen = false;
       _isMainScreen = true;
@@ -131,6 +149,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     _isLoggedIn = false;
     _isMainScreen = false;
     _isProfileScreen = false;
+    _isScheduleEmployeeScreen = false;
     _isWelcomeScreen = true;
     _currentTabIndex = 0;
     notifyListeners();
@@ -143,6 +162,18 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     _isRegisterScreen = false;
     _isMainScreen = true;
     _isProfileScreen = false;
+    _isScheduleEmployeeScreen = false;
+    notifyListeners();
+  }
+
+  void navigateToScheduleEmployee(Employee employee) {
+    _currentEmployee = employee;
+    _isScheduleEmployeeScreen = true;
+    _isProfileScreen = false;
+    _isMainScreen = false;
+    _isWelcomeScreen = false;
+    _isLoginScreen = false;
+    _isRegisterScreen = false;
     notifyListeners();
   }
 
@@ -173,12 +204,14 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isLoginScreen = false;
         _isRegisterScreen = false;
         _isProfileScreen = false;
+        _isScheduleEmployeeScreen = false;
       } else {
         _isWelcomeScreen = true;
         _isLoginScreen = false;
         _isRegisterScreen = false;
         _isMainScreen = false;
         _isProfileScreen = false;
+        _isScheduleEmployeeScreen = false;
       }
     }
 
@@ -265,6 +298,19 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
             key: ValueKey("EditProfileScreen"),
             child: EditProfileScreen(),
           ),
+
+        if (_isScheduleEmployeeScreen && _currentEmployee != null)
+          MaterialPage(
+            key: ValueKey("ScheduleEmployeeScreen"),
+            child: ScheduleEmployeeScreen(
+              employee: _currentEmployee!,
+              onBack: () {
+                _isScheduleEmployeeScreen = false;
+                _isMainScreen = true;
+                notifyListeners();
+              },
+            ),
+          ),
       ],
       onDidRemovePage: (page) {
         if (page.key == ValueKey("RegisterPage")) {
@@ -341,6 +387,22 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isRegisterScreen = false;
         _isMainScreen = false;
         _isProfileScreen = false;
+      }
+    } else if (path.isScheduleEmployeeScreen) {
+      if (_isLoggedIn) {
+        _isWelcomeScreen = false;
+        _isLoginScreen = false;
+        _isRegisterScreen = false;
+        _isMainScreen = false;
+        _isProfileScreen = false;
+        _isScheduleEmployeeScreen = true;
+      } else {
+        _isWelcomeScreen = true;
+        _isLoginScreen = false;
+        _isRegisterScreen = false;
+        _isMainScreen = false;
+        _isProfileScreen = false;
+        _isScheduleEmployeeScreen = false;
       }
     }
   }

@@ -48,6 +48,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return AppRoutePath.editProfile();
     }
 
+    if (uri.pathSegments.first == 'schedule_employee') {
+      return AppRoutePath.scheduleEmployee();
+    }
+
     return AppRoutePath.unknown();
   }
 
@@ -95,7 +99,11 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
     if (configuration.isEditProfileScreen) {
       return RouteInformation(uri: Uri.parse("/edit_profile"));
     }
-    
+
+    if (configuration.isScheduleEmployeeScreen) {
+      return RouteInformation(uri: Uri.parse("/schedule_employee"));
+    }
+
     return RouteInformation(uri: Uri.parse("/"));
   }
 }

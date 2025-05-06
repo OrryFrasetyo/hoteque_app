@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
+import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_widget.dart';
 import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
-import 'package:hoteque_app/ui/schedule/schedule_department_employee_screen.dart';
 import 'package:hoteque_app/ui/widget/attendance_history_item_widget.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../schedule/schedule_employee_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onLogout;
@@ -219,15 +221,11 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Color(0xFF90612D),
             onPressed: () {
               if (authProvider.employee != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => ScheduleDepartmentEmployeeScreen(
-                          employee: authProvider.employee!,
-                        ),
-                  ),
-                );
+                // Get the RouterDelegate from the context
+                final delegate =
+                    Router.of(context).routerDelegate as MyRouteDelegate;
+                // Navigate to the schedule screen
+                delegate.navigateToScheduleEmployee(authProvider.employee!);
               } else {
                 // Tampilkan pesan error jika employee belum tersedia
                 ScaffoldMessenger.of(context).showSnackBar(

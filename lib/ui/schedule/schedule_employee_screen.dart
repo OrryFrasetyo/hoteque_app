@@ -8,18 +8,22 @@ import 'package:hoteque_app/ui/schedule/edit_schedule_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class ScheduleDepartmentEmployeeScreen extends StatefulWidget {
+class ScheduleEmployeeScreen extends StatefulWidget {
+  final VoidCallback onBack;
   final Employee employee;
 
-  const ScheduleDepartmentEmployeeScreen({super.key, required this.employee});
+  const ScheduleEmployeeScreen({
+    super.key,
+    required this.employee,
+    required this.onBack,
+  });
 
   @override
-  State<ScheduleDepartmentEmployeeScreen> createState() =>
+  State<ScheduleEmployeeScreen> createState() =>
       _ScheduleDepartmentEmployeeState();
 }
 
-class _ScheduleDepartmentEmployeeState
-    extends State<ScheduleDepartmentEmployeeScreen> {
+class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
   @override
   void initState() {
     super.initState();
@@ -57,7 +61,7 @@ class _ScheduleDepartmentEmployeeState
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            widget.onBack();
           },
           icon: Icon(Icons.arrow_back, color: Colors.black),
         ),
@@ -80,9 +84,7 @@ class _ScheduleDepartmentEmployeeState
           children: [
             _buildDatePicker(),
             const SizedBox(height: 16),
-            Expanded(
-              child: _buildScheduleContent()
-            ),
+            Expanded(child: _buildScheduleContent()),
           ],
         ),
       ),
