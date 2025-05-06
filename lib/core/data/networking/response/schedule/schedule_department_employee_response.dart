@@ -70,7 +70,7 @@ class Schedule {
   final DateTime createdAt;
   final Department createdBy;
   final DateTime dateSchedule;
-  final Employee employee;
+  final ScheduleEmployee employee;
   final int id;
   final Shift shift;
   final String status;
@@ -91,7 +91,7 @@ class Schedule {
     createdAt: DateTime.parse(json["created_at"]),
     createdBy: Department.fromJson(json["created_by"]),
     dateSchedule: DateTime.parse(json["date_schedule"]),
-    employee: Employee.fromJson(json["employee"]),
+    employee: ScheduleEmployee.fromJson(json["employee"]),
     id: json["id"],
     shift: Shift.fromJson(json["shift"]),
     status: json["status"],
@@ -110,15 +110,15 @@ class Schedule {
   };
 }
 
-class Employee {
+class ScheduleEmployee {
   final int id;
   final String name;
   final String position;
 
-  Employee({required this.id, required this.name, required this.position});
+  ScheduleEmployee({required this.id, required this.name, required this.position});
 
-  factory Employee.fromJson(Map<String, dynamic> json) =>
-      Employee(id: json["id"], name: json["name"], position: json["position"]);
+  factory ScheduleEmployee.fromJson(Map<String, dynamic> json) =>
+      ScheduleEmployee(id: json["id"], name: json["name"], position: json["position"]);
 
   Map<String, dynamic> toJson() => {
     "id": id,

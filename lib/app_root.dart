@@ -5,6 +5,7 @@ import 'package:hoteque_app/core/data/repository/schedule_repository.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position_provider.dart';
 import 'package:hoteque_app/core/provider/profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule_department_provider.dart';
 import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
 import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
 import 'package:hoteque_app/core/provider/update_profile_provider.dart';
@@ -62,6 +63,9 @@ class AppRoot extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => ScheduleEmployeeProvider(context.read<ScheduleRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ScheduleDepartmentProvider(context.read<ScheduleRepository>()),
         ),
       ],
       child: MyApp(),

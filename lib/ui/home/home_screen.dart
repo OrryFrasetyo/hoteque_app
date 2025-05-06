@@ -213,17 +213,34 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF90612D),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ScheduleDepartmentEmployeeScreen(),
-            ),
+      floatingActionButton: Consumer<AuthProvider>(
+        builder: (context, authProvider, _) {
+          return FloatingActionButton(
+            backgroundColor: Color(0xFF90612D),
+            onPressed: () {
+              if (authProvider.employee != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => ScheduleDepartmentEmployeeScreen(
+                          employee: authProvider.employee!,
+                        ),
+                  ),
+                );
+              } else {
+                // Tampilkan pesan error jika employee belum tersedia
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Data karyawan tidak tersedia'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            child: Icon(Icons.calendar_month, color: Colors.white),
           );
         },
-        child: Icon(Icons.calendar_month, color: Colors.white),
       ),
     );
   }
