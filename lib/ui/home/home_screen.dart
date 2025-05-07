@@ -11,7 +11,6 @@ import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../schedule/schedule_employee_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onLogout;

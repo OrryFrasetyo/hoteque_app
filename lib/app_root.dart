@@ -8,6 +8,7 @@ import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/core/provider/schedule_department_provider.dart';
 import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
 import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
+import 'package:hoteque_app/core/provider/time_provider.dart';
 import 'package:hoteque_app/core/provider/update_profile_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/my_app.dart';
@@ -50,22 +51,36 @@ class AppRoot extends StatelessWidget {
           create: (context) => MyRouteDelegate(context.read<AuthProvider>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => PositionProvider(context.read<PositionRepository>()),
+          create:
+              (context) => PositionProvider(context.read<PositionRepository>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => ScheduleNowProvider(context.read<ScheduleRepository>()),
+          create:
+              (context) =>
+                  ScheduleNowProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => ProfileProvider(context.read<ProfileRepository>()),
+          create: (_) => TimeProvider(),
+          ),
+        ChangeNotifierProvider(
+          create:
+              (context) => ProfileProvider(context.read<ProfileRepository>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => UpdateProfileProvider(context.read<ProfileRepository>()),
+          create:
+              (context) =>
+                  UpdateProfileProvider(context.read<ProfileRepository>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => ScheduleEmployeeProvider(context.read<ScheduleRepository>()),
+          create:
+              (context) =>
+                  ScheduleEmployeeProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => ScheduleDepartmentProvider(context.read<ScheduleRepository>()),
+          create:
+              (context) => ScheduleDepartmentProvider(
+                context.read<ScheduleRepository>(),
+              ),
         ),
       ],
       child: MyApp(),

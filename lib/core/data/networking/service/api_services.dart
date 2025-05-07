@@ -16,7 +16,7 @@ import 'package:path/path.dart' as path;
 
 class ApiServices {
   // static const String _baseUrl = "http://192.168.80.233:3000/api";
-  static const String _baseUrl = "http://192.168.68.65:3000/api";
+  static const String _baseUrl = "http://192.168.1.15:3000/api";
 
   final http.Client httpClient;
 
@@ -250,4 +250,30 @@ class ApiServices {
       }
     });
   }
+
+  // Future<ApiResponse<AddScheduleResponse>> editSchedule({
+  //   required Employee employee,
+  // }) async {
+  //   return await executeSafely(() async {
+  //     final uri = Uri.parse("$_baseUrl/schedules");
+  //     final response = await httpClient.post(
+  //       uri,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer ${employee.token}',
+  //       },
+  //       body: jsonEncode(
+  //         ""
+  //       )
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       return AddScheduleResponse.fromJson(jsonDecode(response.body));
+  //     } else {
+  //       throw Exception(
+  //         'Failed to add schedule. Status code: ${response.statusCode}',
+  //       );
+  //     }
+  //   });
+  // }
 }

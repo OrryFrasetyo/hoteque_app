@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
-// import 'package:hoteque_app/ui/profile/profile_screen.dart';
 import 'package:hoteque_app/core/data/networking/states/get_profile_result_state.dart';
 import 'package:provider/provider.dart';
 
