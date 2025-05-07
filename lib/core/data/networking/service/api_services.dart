@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:hoteque_app/core/data/model/employee.dart';
+import 'package:hoteque_app/core/data/networking/response/attendance/attendance_now_response.dart';
 import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/position_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
@@ -251,29 +252,26 @@ class ApiServices {
     });
   }
 
-  // Future<ApiResponse<AddScheduleResponse>> editSchedule({
-  //   required Employee employee,
-  // }) async {
-  //   return await executeSafely(() async {
-  //     final uri = Uri.parse("$_baseUrl/schedules");
-  //     final response = await httpClient.post(
-  //       uri,
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer ${employee.token}',
-  //       },
-  //       body: jsonEncode(
-  //         ""
-  //       )
-  //     );
+  Future<ApiResponse<AttendanceNowResponse>> getAttendanceNow({
+    required Employee employee,
+  }) async {
+    return await executeSafely(() async {
+      final uri = Uri.parse("$_baseUrl/attendance/today");
+      final response = await httpClient.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+      );
 
-  //     if (response.statusCode == 200) {
-  //       return AddScheduleResponse.fromJson(jsonDecode(response.body));
-  //     } else {
-  //       throw Exception(
-  //         'Failed to add schedule. Status code: ${response.statusCode}',
-  //       );
-  //     }
-  //   });
-  // }
+      if (response.statusCode == 200) {
+        return AttendanceNowResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+          'Failed to get attendance now. Status code: ${response.statusCode}',
+        );
+      }
+    });
+  }
 }

@@ -19,6 +19,9 @@ import 'package:hoteque_app/core/routes/my_route_information_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/data/repository/attendance_repository.dart';
+import 'core/provider/attendance_now_provider.dart';
+
 class AppRoot extends StatelessWidget {
   final SharedPreferences sharedPrefs;
 
@@ -43,6 +46,9 @@ class AppRoot extends StatelessWidget {
         ),
         Provider(
           create: (context) => ScheduleRepository(context.read<ApiServices>()),
+        ),
+        Provider(
+          create: (context) => AttendanceRepository(context.read<ApiServices>()),
         ),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(context.read<AuthRepository>()),
@@ -80,6 +86,12 @@ class AppRoot extends StatelessWidget {
           create:
               (context) => ScheduleDepartmentProvider(
                 context.read<ScheduleRepository>(),
+              ),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) => AttendanceNowProvider(
+                context.read<AttendanceRepository>(),
               ),
         ),
       ],

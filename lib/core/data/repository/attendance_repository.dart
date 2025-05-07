@@ -1,0 +1,17 @@
+import 'package:hoteque_app/core/data/networking/response/attendance/attendance_now_response.dart';
+import 'package:hoteque_app/core/data/networking/service/api_services.dart';
+import 'package:hoteque_app/core/data/networking/util/api_response.dart';
+
+import '../model/employee.dart';
+
+class AttendanceRepository {
+  final ApiServices _apiServices;
+
+  AttendanceRepository(this._apiServices);
+
+  Future<ApiResponse<AttendanceNowResponse>> getAttendanceNow({
+    required Employee employee,
+  }) async {
+    return await _apiServices.getAttendanceNow(employee: employee);
+  }
+}
