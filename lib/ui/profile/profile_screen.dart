@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/core/provider/attendance_now_provider.dart';
 import 'package:hoteque_app/core/provider/auth_provider.dart';
 import 'package:hoteque_app/core/provider/profile_provider.dart';
 import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
@@ -75,6 +76,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // Reset schedule provider state
                 Provider.of<ScheduleEmployeeProvider>(
+                  context,
+                  listen: false,
+                ).resetState();
+
+                Provider.of<AttendanceNowProvider>(
                   context,
                   listen: false,
                 ).resetState();

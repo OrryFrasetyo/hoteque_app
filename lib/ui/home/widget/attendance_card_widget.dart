@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/data/networking/states/attendance_now_result_state.dart';
-import 'package:hoteque_app/core/provider/attendance_now_provider.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
-import 'package:hoteque_app/core/provider/time_provider.dart';
+import '../../../core/data/networking/states/attendance_now_result_state.dart';
+import '../../../core/provider/attendance_now_provider.dart';
+import '../../../core/provider/auth_provider.dart';
+import '../../../core/provider/time_provider.dart';
 import '../../presence/presence_history_now_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -77,53 +77,80 @@ class _AttendanceCardWidgetState extends State<AttendanceCardWidget> {
   }
 
   Widget _buildAttendanceStatus(AttendanceNowProvider provider) {
-    if (provider.state is AttendanceNowLoadingState) {
-      return const Center(
-        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-      );
-    } else if (provider.state is AttendanceNowErrorState) {
-      final error = provider.state as AttendanceNowErrorState;
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(
-            "Error: ${error.message}",
-            style: const TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
+    // Selalu tampilkan widget normal terlepas dari state (error/loading)
+    // Jika state loading, tetap tampilkan widget normal dengan indikator loading kecil di pojok
+    Widget statusWidget = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _TimeItem(
+          title: 'Hadir',
+          icon: Icons.access_time_filled,
+          time:
+              provider.state is AttendanceNowErrorState
+                  ? "--:--"
+                  : provider.clockInTime,
         ),
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        _TimeItem(
+          title: 'Pulang',
+          icon: Icons.access_time_filled,
+          time:
+              provider.state is AttendanceNowErrorState
+                  ? "--:--"
+                  : provider.clockOutTime,
+        ),
+      ],
+    );
+
+    // Tambahkan indikator loading jika sedang loading
+    if (provider.state is AttendanceNowLoadingState) {
+      return Stack(
         children: [
-          _TimeItem(
-            title: 'Hadir',
-            icon: Icons.access_time_filled,
-            time: provider.clockInTime,
-          ),
-          _TimeItem(
-            title: 'Pulang',
-            icon: Icons.access_time_filled,
-            time: provider.clockOutTime,
+          statusWidget,
+          const Positioned(
+            right: 0,
+            child: SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            ),
           ),
         ],
       );
     }
+
+    return statusWidget;
   }
 
   Widget _buildAttendanceButton(
     AttendanceNowProvider provider,
     BuildContext context,
   ) {
+    // Tentukan teks tombol
+    String buttonText = "Rekam Hadir";
+    // Jika state error, tetapkan teks tombol ke "Rekam Hadir"
+    if (provider.state is AttendanceNowErrorState) {
+      buttonText = "Rekam Hadir";
+    } else {
+      buttonText = provider.buttonText;
+    }
+
+    // Button selalu diaktifkan jika dalam keadaan error
+    bool isEnabled =
+        provider.state is AttendanceNowErrorState
+            ? true
+            : provider.isButtonEnabled;
+
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed:
-            provider.isButtonEnabled
+            isEnabled
                 ? () {
                   try {
-                    debugPrint("${provider.buttonText} Ditekan");
+                    debugPrint("$buttonText Ditekan");
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const PresenceHistoryNowScreen(),
@@ -142,7 +169,7 @@ class _AttendanceCardWidgetState extends State<AttendanceCardWidget> {
                     );
                   }
                 }
-                : null, // Button disabled jika sudah clock in dan clock out
+                : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFF86572D),
           disabledBackgroundColor: Color(0xFF86572D).withAlpha(50),
@@ -152,7 +179,7 @@ class _AttendanceCardWidgetState extends State<AttendanceCardWidget> {
           padding: const EdgeInsets.symmetric(vertical: 12),
         ),
         child: Text(
-          provider.buttonText,
+          buttonText,
           style: TextStyle(
             color: Colors.white,
             fontSize: 14,
