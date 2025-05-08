@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_now_response.dart';
+import 'package:hoteque_app/core/data/networking/response/attendance/clock_in_attendance_response.dart';
 import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/position_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
@@ -270,6 +271,33 @@ class ApiServices {
       } else {
         throw Exception(
           'Failed to get attendance now. Status code: ${response.statusCode}',
+        );
+      }
+    });
+  }
+
+  Future<ApiResponse<ClockInAttendanceResponse>> clockInAttendance({
+    required Employee employee,
+    required String clockIn,
+  }) async {
+    return await executeSafely(() async {
+      final uri = Uri.parse("$_baseUrl/attendance");
+      final response = await httpClient.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+        body: jsonEncode({
+          "clock_in": clockIn,
+        })
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return ClockInAttendanceResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+          'Failed to clock in attendance now. Status code: ${response.statusCode}',
         );
       }
     });

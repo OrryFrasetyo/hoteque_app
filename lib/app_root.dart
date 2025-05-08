@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/repository/position_repository.dart';
 import 'package:hoteque_app/core/data/repository/profile_repository.dart';
 import 'package:hoteque_app/core/data/repository/schedule_repository.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
-import 'package:hoteque_app/core/provider/position_provider.dart';
-import 'package:hoteque_app/core/provider/profile_provider.dart';
-import 'package:hoteque_app/core/provider/schedule_department_provider.dart';
-import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
-import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
-import 'package:hoteque_app/core/provider/time_provider.dart';
-import 'package:hoteque_app/core/provider/update_profile_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/provider/position/position_provider.dart';
+import 'package:hoteque_app/core/provider/profile/profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_department_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_employee_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/time_provider.dart';
+import 'package:hoteque_app/core/provider/profile/update_profile_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/my_app.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/data/repository/attendance_repository.dart';
-import 'core/provider/attendance_now_provider.dart';
+import 'core/provider/attendance/attendance_now_provider.dart';
 
 class AppRoot extends StatelessWidget {
   final SharedPreferences sharedPrefs;
@@ -48,7 +49,8 @@ class AppRoot extends StatelessWidget {
           create: (context) => ScheduleRepository(context.read<ApiServices>()),
         ),
         Provider(
-          create: (context) => AttendanceRepository(context.read<ApiServices>()),
+          create:
+              (context) => AttendanceRepository(context.read<ApiServices>()),
         ),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(context.read<AuthRepository>()),
@@ -65,9 +67,7 @@ class AppRoot extends StatelessWidget {
               (context) =>
                   ScheduleNowProvider(context.read<ScheduleRepository>()),
         ),
-        ChangeNotifierProvider(
-          create: (_) => TimeProvider(),
-          ),
+        ChangeNotifierProvider(create: (_) => TimeProvider()),
         ChangeNotifierProvider(
           create:
               (context) => ProfileProvider(context.read<ProfileRepository>()),
@@ -90,7 +90,12 @@ class AppRoot extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create:
-              (context) => AttendanceNowProvider(
+              (context) =>
+                  AttendanceNowProvider(context.read<AttendanceRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) => ClockInAttendanceProvider(
                 context.read<AttendanceRepository>(),
               ),
         ),

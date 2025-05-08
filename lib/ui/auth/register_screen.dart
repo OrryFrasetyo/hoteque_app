@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/model/position.dart';
 import 'package:hoteque_app/core/data/networking/states/position_result_state.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
-import 'package:hoteque_app/core/provider/position_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/provider/position/position_provider.dart';
 import 'package:hoteque_app/core/style/theme.dart';
 import 'package:provider/provider.dart';
 

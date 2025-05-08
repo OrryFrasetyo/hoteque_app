@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/provider/attendance_now_provider.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
-import 'package:hoteque_app/core/provider/profile_provider.dart';
-import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
-import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/provider/profile/profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_employee_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
 import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 import 'package:provider/provider.dart';
 

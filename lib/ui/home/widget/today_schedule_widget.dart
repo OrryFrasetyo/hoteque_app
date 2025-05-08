@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/data/networking/states/schedule_now_employee_result_state.dart';
-import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
+import 'package:hoteque_app/core/data/networking/states/schedule/schedule_now_employee_result_state.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_card_widget.dart';
 import 'package:provider/provider.dart';
 

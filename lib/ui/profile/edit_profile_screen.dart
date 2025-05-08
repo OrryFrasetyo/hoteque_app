@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
-import 'package:hoteque_app/core/provider/update_profile_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/provider/profile/update_profile_provider.dart';
 import 'package:hoteque_app/core/style/theme.dart';
 import 'package:provider/provider.dart';
 

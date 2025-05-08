@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/style/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback onLogin;

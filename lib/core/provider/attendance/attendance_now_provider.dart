@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../data/model/employee.dart';
-import '../data/networking/response/attendance/attendance_now_response.dart';
-import '../data/networking/states/attendance_now_result_state.dart';
-import '../data/networking/util/api_response.dart';
-import '../data/repository/attendance_repository.dart';
+import '../../data/model/employee.dart';
+import '../../data/networking/response/attendance/attendance_now_response.dart';
+import '../../data/networking/states/attendance/attendance_now_result_state.dart';
+import '../../data/networking/util/api_response.dart';
+import '../../data/repository/attendance_repository.dart';
 
 class AttendanceNowProvider extends ChangeNotifier {
   final AttendanceRepository _attendanceRepository;

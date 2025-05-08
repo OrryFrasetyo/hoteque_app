@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/model/schedule_employee.dart';
-import 'package:hoteque_app/core/data/networking/states/schedule_employee_result_state.dart';
+import 'package:hoteque_app/core/data/networking/states/schedule/schedule_employee_result_state.dart';
 import 'package:hoteque_app/core/data/repository/schedule_repository.dart';
 
 class ScheduleEmployeeProvider extends ChangeNotifier {

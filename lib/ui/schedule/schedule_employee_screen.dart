@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_department_employee_response.dart';
-import 'package:hoteque_app/core/data/networking/states/schedule_department_result_state.dart';
-import 'package:hoteque_app/core/provider/schedule_department_provider.dart';
+import 'package:hoteque_app/core/data/networking/states/schedule/schedule_department_result_state.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_department_provider.dart';
 import 'package:hoteque_app/ui/schedule/add_schedule_screen.dart';
 import 'package:hoteque_app/ui/schedule/edit_schedule_screen.dart';
 import 'package:intl/intl.dart';

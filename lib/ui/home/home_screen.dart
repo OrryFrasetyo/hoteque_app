@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
-import 'package:hoteque_app/core/provider/profile_provider.dart';
-import 'package:hoteque_app/core/provider/schedule_now_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/provider/profile/profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_widget.dart';

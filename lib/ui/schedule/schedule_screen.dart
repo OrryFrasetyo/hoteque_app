@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/model/schedule_employee.dart';
-import 'package:hoteque_app/core/data/networking/states/schedule_employee_result_state.dart';
-import 'package:hoteque_app/core/provider/auth_provider.dart';
-import 'package:hoteque_app/core/provider/schedule_employee_provider.dart';
+import 'package:hoteque_app/core/data/networking/states/schedule/schedule_employee_result_state.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/schedule_employee_provider.dart';
 import 'package:hoteque_app/ui/schedule/widgets/schedule_item_widget.dart';
 import 'package:hoteque_app/ui/schedule/widgets/schedule_error_widget.dart';
 import 'package:hoteque_app/ui/schedule/widgets/schedule_loading_widget.dart';
