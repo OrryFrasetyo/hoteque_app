@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../data/model/attendance.dart';
 import '../../data/model/employee.dart';
-import '../../data/networking/response/attendance/attendance_three_days_ago_response.dart';
 import '../../data/networking/states/attendance/attendance_three_days_ago_result_state.dart';
 import '../../data/repository/attendance_repository.dart';
 

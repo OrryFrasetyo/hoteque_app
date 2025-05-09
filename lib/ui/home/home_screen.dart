@@ -5,7 +5,6 @@ import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_widget.dart';
-import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
 import 'package:provider/provider.dart';
@@ -181,12 +180,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PresenceHistoryScreen(),
-                              ),
-                            );
+                            final routerDelegate =
+                                Router.of(context).routerDelegate;
+                            if (routerDelegate is MyRouteDelegate) {
+                              routerDelegate.navigateToPresence();
+                            }
                           },
                           child: Text(
                             "Lihat Semua",

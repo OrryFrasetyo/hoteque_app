@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/ui/home/widget/recap_item_widget.dart';
-import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
 
 class MonthlyAttendanceRecapWidget extends StatelessWidget {
   const MonthlyAttendanceRecapWidget({super.key});
 
-  void _navigateToPresenceHistory(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PresenceHistoryScreen(),
-      ),
-    );
-  }
+  // void _navigateToPresenceHistory(BuildContext context) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => PresenceHistoryScreen(),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class MonthlyAttendanceRecapWidget extends StatelessWidget {
           child: Row(
             children: [
               GestureDetector(
-                onTap: () => _navigateToPresenceHistory(context),
+                // onTap: () => _navigateToPresenceHistory(context),
                 child: RecapItemWidget(
                   iconWidget: Image.asset(
                     "assets/icon/present.png",
@@ -47,7 +46,7 @@ class MonthlyAttendanceRecapWidget extends StatelessWidget {
               ),
               SizedBox(width: 6),
               GestureDetector(
-                onTap: () => _navigateToPresenceHistory(context),
+                // onTap: () => _navigateToPresenceHistory(context),
                 child: RecapItemWidget(
                   iconWidget: Image.asset(
                     "assets/icon/no_present.png",
@@ -61,7 +60,7 @@ class MonthlyAttendanceRecapWidget extends StatelessWidget {
               ),
               SizedBox(width: 6),
               GestureDetector(
-                onTap: () => _navigateToPresenceHistory(context),
+                // onTap: () => _navigateToPresenceHistory(context),
                 child: RecapItemWidget(
                   iconWidget: Image.asset(
                     "assets/icon/late.png",
@@ -75,7 +74,7 @@ class MonthlyAttendanceRecapWidget extends StatelessWidget {
               ),
               SizedBox(width: 6),
               GestureDetector(
-                onTap: () => _navigateToPresenceHistory(context),
+                // onTap: () => _navigateToPresenceHistory(context),
                 child: RecapItemWidget(
                   iconWidget: Image.asset(
                     "assets/icon/go_home.png",

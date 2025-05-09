@@ -1,3 +1,4 @@
+import 'package:hoteque_app/core/data/networking/response/attendance/attendance_month_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_now_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_three_days_ago_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/clock_in_attendance_response.dart';
@@ -20,6 +21,12 @@ class AttendanceRepository {
   Future<ApiResponse<AttendanceThreeDaysAgoResponse>>
   getAttendanceThreeDaysAgo({required Employee employee}) async {
     return await _apiServices.getAttendanceThreeDaysAgo(employee: employee);
+  }
+
+  Future<ApiResponse<AttendanceMonthResponse>> getAttendanceMonth({
+    required Employee employee,
+  }) async {
+    return await _apiServices.getAttendanceMonth(employee: employee);
   }
 
   Future<ApiResponse<ClockInAttendanceResponse>> clockInAttendance({

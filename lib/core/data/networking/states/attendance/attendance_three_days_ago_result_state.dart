@@ -1,4 +1,4 @@
-import 'package:hoteque_app/core/data/networking/response/attendance/attendance_three_days_ago_response.dart';
+import '../../../model/attendance.dart';
 
 sealed class AttendanceThreeDaysAgoResultState {}
 

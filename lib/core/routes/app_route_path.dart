@@ -8,6 +8,7 @@ class AppRoutePath {
   final bool isProfileScreen;
   final bool isEditProfileScreen;
   final bool isScheduleEmployeeScreen;
+  final bool isPresenceScreen;
 
   AppRoutePath.welcome()
     : isWelcomeScreen = true,
@@ -17,6 +18,7 @@ class AppRoutePath {
       isProfileScreen = false,
       isEditProfileScreen = false,
       isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -28,6 +30,7 @@ class AppRoutePath {
       isProfileScreen = false,
       isEditProfileScreen = false,
       isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -39,6 +42,7 @@ class AppRoutePath {
       isProfileScreen = false,
       isEditProfileScreen = false,
       isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -50,6 +54,7 @@ class AppRoutePath {
       isProfileScreen = false,
       isEditProfileScreen = false,
       isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
       isUnknown = false;
 
   AppRoutePath.unknown()
@@ -60,6 +65,7 @@ class AppRoutePath {
       isProfileScreen = false,
       isEditProfileScreen = false,
       isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
       isUnknown = true,
       tabIndex = null;
 
@@ -71,6 +77,7 @@ class AppRoutePath {
       isProfileScreen = true,
       isEditProfileScreen = false,
       isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -82,6 +89,7 @@ class AppRoutePath {
       isProfileScreen = false,
       isEditProfileScreen = true,
       isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -93,6 +101,19 @@ class AppRoutePath {
       isProfileScreen = false,
       isEditProfileScreen = false,
       isScheduleEmployeeScreen = true,
+      isPresenceScreen = false,
+      isUnknown = false,
+      tabIndex = null;
+
+  AppRoutePath.presenceEmployee()
+    : isWelcomeScreen = false,
+      isRegisterScreen = false,
+      isLoginScreen = false,
+      isMainScreen = false,
+      isProfileScreen = false,
+      isEditProfileScreen = false,
+      isScheduleEmployeeScreen = false,
+      isPresenceScreen = true,
       isUnknown = false,
       tabIndex = null;
 }

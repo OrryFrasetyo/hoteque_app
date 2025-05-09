@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:hoteque_app/core/data/model/employee.dart';
+import 'package:hoteque_app/core/data/networking/response/attendance/attendance_month_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_now_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_three_days_ago_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/clock_in_attendance_response.dart';
@@ -13,7 +14,7 @@ import 'package:hoteque_app/core/data/networking/response/schedule/schedule_depa
 import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/response/login_response.dart';
 import 'package:hoteque_app/core/data/networking/util/api_response.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;  
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as path;
 
@@ -322,6 +323,29 @@ class ApiServices {
       } else {
         throw Exception(
           'Failed to get attendance 3 days ago. Status code: ${response.statusCode}',
+        );
+      }
+    });
+  }
+
+  Future<ApiResponse<AttendanceMonthResponse>> getAttendanceMonth({
+    required Employee employee,
+  }) async {
+    return await executeSafely(() async {
+      final uri = Uri.parse("$_baseUrl/attendance/month");
+      final response = await httpClient.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return AttendanceMonthResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+          'Failed to get attendance month. Status code: ${response.statusCode}',
         );
       }
     });

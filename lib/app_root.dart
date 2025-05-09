@@ -22,6 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/data/repository/attendance_repository.dart';
+import 'core/provider/attendance/attendance_month_provider.dart';
 import 'core/provider/attendance/attendance_now_provider.dart';
 
 class AppRoot extends StatelessWidget {
@@ -98,6 +99,11 @@ class AppRoot extends StatelessWidget {
           create:
               (context) =>
                   AttendanceThreeDaysProvider(context.read<AttendanceRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) =>
+                  AttendanceMonthProvider(context.read<AttendanceRepository>()),
         ),
         ChangeNotifierProvider(
           create:

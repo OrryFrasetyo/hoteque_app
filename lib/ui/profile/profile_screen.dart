@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/core/provider/attendance/attendance_month_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/provider/profile/profile_provider.dart';
@@ -81,6 +82,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ).resetState();
 
                 Provider.of<AttendanceNowProvider>(
+                  context,
+                  listen: false,
+                ).resetState();
+
+                Provider.of<AttendanceMonthProvider>(
                   context,
                   listen: false,
                 ).resetState();
