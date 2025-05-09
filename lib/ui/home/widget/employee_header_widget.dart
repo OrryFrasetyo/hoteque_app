@@ -101,6 +101,7 @@ class EmployeeHeaderWidget extends StatelessWidget {
         child: ClipOval(
           child: CachedNetworkImage(
             imageUrl: imageUrl,
+            cacheKey: '${imageUrl}_${DateTime.now().millisecondsSinceEpoch}',
             fit: BoxFit.cover,
             width: 100,
             height: 100,

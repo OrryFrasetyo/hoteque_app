@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/repository/position_repository.dart';
 import 'package:hoteque_app/core/data/repository/profile_repository.dart';
 import 'package:hoteque_app/core/data/repository/schedule_repository.dart';
+import 'package:hoteque_app/core/provider/attendance/attendance_three_days_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position/position_provider.dart';
@@ -92,6 +93,11 @@ class AppRoot extends StatelessWidget {
           create:
               (context) =>
                   AttendanceNowProvider(context.read<AttendanceRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) =>
+                  AttendanceThreeDaysProvider(context.read<AttendanceRepository>()),
         ),
         ChangeNotifierProvider(
           create:

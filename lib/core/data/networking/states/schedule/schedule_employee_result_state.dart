@@ -8,12 +8,12 @@ class ScheduleEmployeeLoadingState extends ScheduleEmployeeResultState {}
 
 class ScheduleEmployeeErrorState extends ScheduleEmployeeResultState {
   final String message;
-  
+
   ScheduleEmployeeErrorState(this.message);
 }
 
 class ScheduleEmployeeLoadedState extends ScheduleEmployeeResultState {
   final List<ScheduleEmployee> schedules;
-  
+
   ScheduleEmployeeLoadedState(this.schedules);
 }

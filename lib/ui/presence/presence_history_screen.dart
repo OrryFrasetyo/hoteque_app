@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/ui/widget/attendance_history_item_widget.dart';
+import 'package:hoteque_app/ui/presence/widget/attendance_history_item_widget.dart';
 
 class PresenceHistoryScreen extends StatelessWidget {
   const PresenceHistoryScreen({super.key});

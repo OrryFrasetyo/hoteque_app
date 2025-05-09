@@ -6,11 +6,13 @@ import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_widget.dart';
 import 'package:hoteque_app/ui/presence/presence_history_screen.dart';
-import 'package:hoteque_app/ui/widget/attendance_history_item_widget.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/data/networking/states/attendance/attendance_three_days_ago_result_state.dart';
+import '../../core/provider/attendance/attendance_three_days_provider.dart';
+import '../presence/widget/attendance_history_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onLogout;
@@ -51,6 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
         await scheduleNowProvider.getTodaySchedule(
           employee: authProvider.employee!,
         );
+
+        // Load attendance data
+        if (mounted) {
+          final attendanceProvider =
+              context.read<AttendanceThreeDaysProvider>();
+          await attendanceProvider.getAttendanceThreeDaysAgo(
+            employee: authProvider.employee!,
+          );
+        }
       }
     }
   }
@@ -59,12 +70,16 @@ class _HomeScreenState extends State<HomeScreen> {
     final authProvider = context.read<AuthProvider>();
     final profileProvider = context.read<ProfileProvider>();
     final scheduleNowProvider = context.read<ScheduleNowProvider>();
+    final attendanceProvider = context.read<AttendanceThreeDaysProvider>();
 
     await authProvider.getEmployee();
 
     if (authProvider.employee != null && authProvider.employee!.token != null) {
       await profileProvider.getProfile(employee: authProvider.employee!);
       await scheduleNowProvider.getTodaySchedule(
+        employee: authProvider.employee!,
+      );
+      await attendanceProvider.getAttendanceThreeDaysAgo(
         employee: authProvider.employee!,
       );
     }
@@ -187,26 +202,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 12),
 
-                  AttendanceHistoryItemWidget(
-                    date: DateTime(2025, 2, 5),
-                    checkInTime: "14.55",
-                    checkOutTime: "22.05",
-                    checkInStatus: "Tepat Waktu",
-                    checkOutStatus: "Tepat Waktu",
-                  ),
-                  AttendanceHistoryItemWidget(
-                    date: DateTime(2025, 2, 4),
-                    checkInTime: "08:59",
-                    checkOutTime: "16:15",
-                    checkInStatus: "Terlambat",
-                    checkOutStatus: "Tepat Waktu",
-                  ),
-                  AttendanceHistoryItemWidget(
-                    date: DateTime(2025, 2, 3),
-                    checkInTime: "07:59",
-                    checkOutTime: "16:15",
-                    checkInStatus: "Tepat Waktu",
-                    checkOutStatus: "Tepat Waktu",
+                  Consumer<AttendanceThreeDaysProvider>(
+                    builder: (context, provider, _) {
+                      // If there's an error in the attendance state, we provide retry functionality
+                      if (provider.state is AttendanceThreeDaysAgoErrorState) {
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.error_outline,
+                                color: Colors.red,
+                                size: 48,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                (provider.state
+                                        as AttendanceThreeDaysAgoErrorState)
+                                    .message,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              const SizedBox(height: 8),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (authProvider.employee != null) {
+                                    provider.getAttendanceThreeDaysAgo(
+                                      employee: authProvider.employee!,
+                                    );
+                                  }
+                                },
+                                child: Text('Coba Lagi'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      // Otherwise, use the standard AttendanceHistoryWidget
+                      return AttendanceHistoryWidget();
+                    },
                   ),
                 ],
               ),

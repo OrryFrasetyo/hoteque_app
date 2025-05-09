@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_now_response.dart';
+import 'package:hoteque_app/core/data/networking/response/attendance/attendance_three_days_ago_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/clock_in_attendance_response.dart';
 import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/position_response.dart';
@@ -298,6 +299,29 @@ class ApiServices {
       } else {
         throw Exception(
           'Failed to clock in attendance now. Status code: ${response.statusCode}',
+        );
+      }
+    });
+  }
+
+  Future<ApiResponse<AttendanceThreeDaysAgoResponse>> getAttendanceThreeDaysAgo({
+    required Employee employee,
+  }) async {
+    return await executeSafely(() async {
+      final uri = Uri.parse("$_baseUrl/attendance");
+      final response = await httpClient.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return AttendanceThreeDaysAgoResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+          'Failed to get attendance 3 days ago. Status code: ${response.statusCode}',
         );
       }
     });
