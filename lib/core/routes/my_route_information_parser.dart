@@ -56,6 +56,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return AppRoutePath.presenceEmployee();
     }
 
+    if (uri.pathSegments.first == 'maps_presence') {
+      return AppRoutePath.mapsPresence();
+    }
+
     return AppRoutePath.unknown();
   }
 
@@ -110,6 +114,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
 
     if (configuration.isPresenceScreen) {
       return RouteInformation(uri: Uri.parse("/presence"));
+    }
+
+    if (configuration.isAttendanceMapsScreen) {
+      return RouteInformation(uri: Uri.parse("/maps_presence"));
     }
 
     return RouteInformation(uri: Uri.parse("/"));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../ui/presence/service/location_service.dart';
-import 'dart:math' show asin, cos, pi, pow, sin, sqrt;
+import 'dart:math' show asin, cos, pi, sin, sqrt;
 
 class LocationProvider extends ChangeNotifier {
   final LatLng appskepOffice = const LatLng(

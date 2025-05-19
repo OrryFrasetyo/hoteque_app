@@ -5,6 +5,7 @@ import 'package:hoteque_app/core/routes/app_route_path.dart';
 import 'package:hoteque_app/ui/auth/login_screen.dart';
 import 'package:hoteque_app/ui/auth/register_screen.dart';
 import 'package:hoteque_app/ui/main/main_screen.dart';
+import 'package:hoteque_app/ui/presence/screen/attendance_maps_screen.dart';
 import 'package:hoteque_app/ui/presence/screen/presence_history_screen.dart';
 import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 import 'package:hoteque_app/ui/profile/profile_screen.dart';
@@ -25,6 +26,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
   bool _isEditProfileScreen = false;
   bool _isScheduleEmployeeScreen = false;
   bool _isPresenceScreen = false;
+  bool _isAttendanceMapsScreen = false;
   bool _isLoggedIn = false;
 
   Employee? _currentEmployee;
@@ -48,6 +50,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isProfileScreen = false;
       _isScheduleEmployeeScreen = false;
       _isPresenceScreen = false;
+      _isAttendanceMapsScreen = false;
     } else if (_isLoggedIn) {
       _isWelcomeScreen = false;
       _isMainScreen = true;
@@ -56,6 +59,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isProfileScreen = false;
       _isScheduleEmployeeScreen = false;
       _isPresenceScreen = false;
+      _isAttendanceMapsScreen = false;
     } else {
       _isWelcomeScreen = true;
       _isRegisterScreen = false;
@@ -64,6 +68,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isProfileScreen = false;
       _isScheduleEmployeeScreen = false;
       _isPresenceScreen = false;
+      _isAttendanceMapsScreen = false;
     }
     notifyListeners();
   }
@@ -80,7 +85,9 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   AppRoutePath get currentConfiguration {
-    if (_isPresenceScreen) {
+    if (_isAttendanceMapsScreen) {
+      return AppRoutePath.mapsPresence();
+    } else if (_isPresenceScreen) {
       return AppRoutePath.presenceEmployee();
     } else if (_isScheduleEmployeeScreen) {
       return AppRoutePath.scheduleEmployee();
@@ -101,6 +108,13 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   Future<bool> popRoute() async {
+    if (_isAttendanceMapsScreen) {
+      _isAttendanceMapsScreen = false;
+      _isMainScreen = true;
+      notifyListeners();
+      return true;
+    }
+
     if (_isPresenceScreen) {
       _isPresenceScreen = false;
       _isMainScreen = true;
@@ -177,6 +191,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     _isMainScreen = true;
     _isProfileScreen = false;
     _isScheduleEmployeeScreen = false;
+    _isAttendanceMapsScreen = false;
     notifyListeners();
   }
 
@@ -215,6 +230,15 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     notifyListeners();
   }
 
+  void navigateToAttendanceMaps() {
+    _isAttendanceMapsScreen = true;
+    _isMainScreen = false;
+    _isWelcomeScreen = false;
+    _isLoginScreen = false;
+    _isRegisterScreen = false;
+    notifyListeners();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isCurrentLoggedIn = authProvider.isLoggedIn;
@@ -229,6 +253,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isProfileScreen = false;
         _isScheduleEmployeeScreen = false;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
       } else {
         _isWelcomeScreen = true;
         _isLoginScreen = false;
@@ -237,6 +262,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isProfileScreen = false;
         _isScheduleEmployeeScreen = false;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
       }
     }
 
@@ -348,6 +374,18 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
               },
             ),
           ),
+
+        if (_isAttendanceMapsScreen)
+          MaterialPage(
+            key: ValueKey("AttendanceMapsScreen"),
+            child: AttendanceMapsScreen(
+              onBack: () {
+                _isAttendanceMapsScreen = false;
+                _isMainScreen = true;
+                notifyListeners();
+              },
+            ),
+          ),
       ],
       onDidRemovePage: (page) {
         if (page.key == ValueKey("RegisterPage")) {
@@ -368,6 +406,8 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isMainScreen = false;
       _isProfileScreen = false;
       _isPresenceScreen = false;
+      _isAttendanceMapsScreen = false;
+      _isScheduleEmployeeScreen = false;
       _isLoggedIn = false;
       return;
     }
@@ -380,6 +420,8 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isMainScreen = false;
       _isProfileScreen = false;
       _isPresenceScreen = false;
+      _isAttendanceMapsScreen = false;
+      _isScheduleEmployeeScreen = false;
       _isLoggedIn = false;
       return;
     } else if (path.isLoginScreen) {
@@ -389,6 +431,8 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isMainScreen = false;
       _isProfileScreen = false;
       _isPresenceScreen = false;
+      _isAttendanceMapsScreen = false;
+      _isScheduleEmployeeScreen = false;
       _isLoggedIn = false;
     } else if (path.isRegisterScreen) {
       _isWelcomeScreen = false;
@@ -397,6 +441,8 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isMainScreen = false;
       _isProfileScreen = false;
       _isPresenceScreen = false;
+      _isAttendanceMapsScreen = false;
+      _isScheduleEmployeeScreen = false;
       _isLoggedIn = false;
     } else if (path.isMainScreen) {
       if (_isLoggedIn) {
@@ -406,6 +452,8 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isMainScreen = true;
         _isProfileScreen = false;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
+        _isScheduleEmployeeScreen = false;
 
         if (path.tabIndex != null) {
           _currentTabIndex = path.tabIndex!;
@@ -424,6 +472,8 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isMainScreen = false;
         _isProfileScreen = true;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
+      _isScheduleEmployeeScreen = false;
       } else {
         _isWelcomeScreen = true;
         _isLoginScreen = false;
@@ -431,6 +481,8 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isMainScreen = false;
         _isProfileScreen = false;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
+      _isScheduleEmployeeScreen = false;
       }
     } else if (path.isScheduleEmployeeScreen) {
       if (_isLoggedIn) {
@@ -441,6 +493,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isProfileScreen = false;
         _isScheduleEmployeeScreen = true;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
       } else {
         _isWelcomeScreen = true;
         _isLoginScreen = false;
@@ -449,6 +502,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isProfileScreen = false;
         _isScheduleEmployeeScreen = false;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
       }
     } else if (path.isPresenceScreen) {
       if (_isLoggedIn) {
@@ -458,6 +512,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isMainScreen = false;
         _isProfileScreen = false;
         _isPresenceScreen = true;
+        _isAttendanceMapsScreen = false;
       } else {
         _isWelcomeScreen = true;
         _isLoginScreen = false;
@@ -465,6 +520,25 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isMainScreen = false;
         _isProfileScreen = false;
         _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
+      }
+    } else if (path.isAttendanceMapsScreen) {
+      if (_isLoggedIn) {
+        _isWelcomeScreen = false;
+        _isLoginScreen = false;
+        _isRegisterScreen = false;
+        _isMainScreen = false;
+        _isProfileScreen = false;
+        _isPresenceScreen = false;
+        _isAttendanceMapsScreen = true;
+      } else {
+        _isWelcomeScreen = true;
+        _isLoginScreen = false;
+        _isRegisterScreen = false;
+        _isMainScreen = false;
+        _isProfileScreen = false;
+        _isPresenceScreen = false;
+        _isAttendanceMapsScreen = false;
       }
     }
   }

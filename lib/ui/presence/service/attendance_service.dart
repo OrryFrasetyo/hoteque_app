@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:provider/provider.dart';
 
 class AttendanceService {
@@ -25,32 +28,44 @@ class AttendanceService {
         return false; // User is not within the office radius
       }
 
-      // Simulate an API request
-      await Future.delayed(const Duration(seconds: 2));
+      // Get the auth provider to access employee data
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.employee == null) {
+        debugPrint('Employee data is not available');
+        return false;
+      }
 
-      // This would be replaced with a real API call
-      // Example:
-      // final response = await http.post(
-      //   Uri.parse('https://your-api.com/attendance'),
-      //   body: jsonEncode({
-      //     'userId': userId,
-      //     'latitude': locationProvider.currentLocation.latitude,
-      //     'longitude': locationProvider.currentLocation.longitude,
-      //     'address': locationProvider.currentAddress,
-      //     'timestamp': DateTime.now().toIso8601String(),
-      //   }),
-      //   headers: {'Content-Type': 'application/json'},
-      // );
-
-      // Log the attendance data (this would be saved to your backend)
-      debugPrint('Recording attendance for user $userId');
-      debugPrint(
-        'Location: ${locationProvider.currentLocation.latitude}, ${locationProvider.currentLocation.longitude}',
+      // Get clock in provider
+      final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+        context,
+        listen: false,
       );
-      debugPrint('Address: ${locationProvider.currentAddress}');
-      debugPrint('Time: ${DateTime.now()}');
 
-      return true; // Success
+      // Flag to track success of the operation
+      bool success = false;
+
+      // Call the clock in API
+      await clockInProvider.clockInAttendance(
+        employee: authProvider.employee!,
+        onSuccess: () {
+          success = true;
+
+          // Navigate back to home screen (delay slightly to allow state update)
+          Future.microtask(() {
+            // Use Router for navigation
+            final routerDelegate = Router.of(context).routerDelegate;
+            if (routerDelegate is MyRouteDelegate) {
+              routerDelegate.navigateToHome();
+            }
+          });
+        },
+        onError: (errorMsg) {
+          success = false;
+          debugPrint('Error recording attendance: $errorMsg');
+        },
+      );
+
+      return success;
     } catch (e) {
       debugPrint('Error recording attendance: $e');
       return false; // Failure

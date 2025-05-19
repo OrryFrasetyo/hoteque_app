@@ -28,6 +28,8 @@ class ClockInAttendanceProvider extends ChangeNotifier {
       final now = DateTime.now();
       final formattedTime = DateFormat('HH:mm').format(now);
 
+      await Future.delayed(const Duration(seconds: 2));
+
       // Kirim request
       final response = await _repository.clockInAttendance(
         employee: employee,

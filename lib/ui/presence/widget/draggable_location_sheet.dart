@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hoteque_app/core/data/networking/states/attendance/clock_in_attendance_result_state.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
-import 'package:hoteque_app/ui/presence/service/attendance_service.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/routes/my_route_delegate.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DraggableLocationSheet extends StatefulWidget {
@@ -15,7 +19,6 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
   // Initial and maximum heights for the sheet
   final double _minHeight = 150.0;
   final double _maxHeight = 300.0;
-  final AttendanceService _attendanceService = AttendanceService();
   bool _isSubmitting = false;
 
   // Animation controller for smoother dragging
@@ -34,6 +37,15 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
       end: _maxHeight,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _controller.value = 0.0; // Start with minimum height
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+        context,
+        listen: false,
+      );
+
+      clockInProvider.resetState();
+    });
   }
 
   @override
@@ -52,6 +64,12 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
   Widget build(BuildContext context) {
     final locationProvider = Provider.of<LocationProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
+    final clockInProvider = Provider.of<ClockInAttendanceProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    setState(() {
+      _isSubmitting = clockInProvider.state is ClockInAttendanceLoadingState;
+    });
 
     return Positioned(
       bottom: 0,
@@ -250,64 +268,81 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
   }
 
   Future<void> _handleRecordAttendance(BuildContext context) async {
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    try {
-      // In a real app, you would get the user ID from authentication
-      const userId = "user123";
-
-      // Get location provider to check if user is within radius
-      final locationProvider = Provider.of<LocationProvider>(
-        context,
-        listen: false,
+    // Get auth provider to access the employee data
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.employee == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Data karyawan tidak tersedia"),
+          backgroundColor: Colors.red,
+        ),
       );
-      final withinRadius = locationProvider.isWithinOfficeRadius();
+      return;
+    }
 
-      if (!withinRadius) {
-        // Show error message if user is not within office radius
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Gagal mencatat kehadiran: Anda berada di luar radius kantor",
-            ),
-            backgroundColor: Colors.red,
+    // Get location provider to check if user is within radius
+    final locationProvider = Provider.of<LocationProvider>(
+      context,
+      listen: false,
+    );
+    final withinRadius = locationProvider.isWithinOfficeRadius();
+
+    if (!withinRadius) {
+      // Show error message if user is not within office radius
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Gagal mencatat kehadiran: Anda berada di luar radius kantor",
           ),
-        );
-        return;
-      }
-
-      final success = await _attendanceService.recordAttendance(
-        context: context,
-        userId: userId,
+          backgroundColor: Colors.red,
+        ),
       );
+      return;
+    }
 
-      if (success) {
+    // Get current time in HH:mm format
+    final now = DateTime.now();
+    final formattedTime = DateFormat('HH:mm').format(now);
+
+    // Get clock in provider
+    final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+      context,
+      listen: false,
+    );
+
+    // Call the clock in method
+    await clockInProvider.clockInAttendance(
+      employee: authProvider.employee!,
+      onSuccess: () {
+        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Kehadiran berhasil dicatat"),
             backgroundColor: Colors.green,
           ),
         );
-      } else {
+
+        // Navigate back to home screen
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Use Router for navigation
+          final routerDelegate = Router.of(context).routerDelegate;
+          if (routerDelegate is MyRouteDelegate) {
+            routerDelegate.navigateToHome();
+          } else {
+            // Fallback to Navigator if Router is not available
+            Navigator.of(context).pop();
+          }
+        });
+      },
+      onError: (errorMsg) {
+        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Gagal mencatat kehadiran: Pastikan Anda berada dalam radius kantor",
-            ),
+          SnackBar(
+            content: Text("Gagal mencatat kehadiran: $errorMsg"),
             backgroundColor: Colors.red,
           ),
         );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
-      );
-    } finally {
-      setState(() {
-        _isSubmitting = false;
-      });
-    }
+      },
+    );
   }
 }

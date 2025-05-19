@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/networking/states/attendance/attendance_now_result_state.dart';
 import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
-import 'package:hoteque_app/ui/presence/screen/attendance_maps_screen.dart';
-import 'package:hoteque_app/ui/presence/screen/presence_history_now_screen.dart';
+import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:provider/provider.dart';
 
 class ButtonPresenceWidget extends StatelessWidget {
@@ -32,23 +31,10 @@ class ButtonPresenceWidget extends StatelessWidget {
                   isEnabled
                       ? () {
                         debugPrint("$buttonText Ditekan");
-                        try {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => const AttendanceMapsScreen(),
-                            ),
-                          );
-                        } catch (e) {
-                          debugPrint("Error saat navigasi: $e");
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const PresenceHistoryNowScreen(),
-                            ),
-                          );
+                        final routerDelegate =
+                            Router.of(context).routerDelegate;
+                        if (routerDelegate is MyRouteDelegate) {
+                          routerDelegate.navigateToAttendanceMaps();
                         }
                       }
                       : null,

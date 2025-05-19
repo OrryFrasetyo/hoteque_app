@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
 import 'package:hoteque_app/ui/presence/widget/draggable_location_sheet.dart';
 import 'package:provider/provider.dart';
 
 class AttendanceMapsScreen extends StatefulWidget {
-  const AttendanceMapsScreen({super.key});
+  final VoidCallback onBack;
+
+  const AttendanceMapsScreen({super.key, required this.onBack});
 
   @override
   State<AttendanceMapsScreen> createState() => _AttendanceMapsScreenState();
 }
 
 class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Reset the ClockInAttendanceProvider state when entering this screen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+        context,
+        listen: false,
+      );
+      clockInProvider.resetState();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<LocationProvider>(
@@ -27,7 +43,7 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
             ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: widget.onBack,
             ),
           ),
           body: Stack(
