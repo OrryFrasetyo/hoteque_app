@@ -3,8 +3,8 @@ import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/ui/presence/widget/attendance_month_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/data/networking/states/attendance/attendance_month_result_state.dart';
-import '../../core/provider/attendance/attendance_month_provider.dart';
+import '../../../core/data/networking/states/attendance/attendance_month_result_state.dart';
+import '../../../core/provider/attendance/attendance_month_provider.dart';
 
 class PresenceHistoryScreen extends StatefulWidget {
   final VoidCallback onBack;

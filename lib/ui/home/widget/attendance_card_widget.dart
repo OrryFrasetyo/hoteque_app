@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/data/networking/states/attendance/clock_in_attendance_result_state.dart';
-import '../../../core/provider/attendance/clock_in_attendance_provider.dart';
-import '../../../core/data/networking/states/attendance/attendance_now_result_state.dart';
-import '../../../core/provider/attendance/attendance_now_provider.dart';
-import '../../../core/provider/auth/auth_provider.dart';
-import '../../../core/provider/attendance/time_provider.dart';
-import '../../presence/presence_history_now_screen.dart';
+import 'package:hoteque_app/core/data/networking/states/attendance/attendance_now_result_state.dart';
+import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/time_provider.dart';
+import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class AttendanceCardWidget extends StatefulWidget {
@@ -42,18 +39,8 @@ class _AttendanceCardWidgetState extends State<AttendanceCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<
-      TimeProvider,
-      AttendanceNowProvider,
-      ClockInAttendanceProvider
-    >(
-      builder: (
-        context,
-        timeProvider,
-        attendanceNowProvider,
-        clockInProvider,
-        _,
-      ) {
+    return Consumer2<TimeProvider, AttendanceNowProvider>(
+      builder: (context, timeProvider, attendanceNowProvider, _) {
         return Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
@@ -80,11 +67,6 @@ class _AttendanceCardWidgetState extends State<AttendanceCardWidget> {
               const SizedBox(height: 16.0),
               _buildAttendanceStatus(attendanceNowProvider),
               const SizedBox(height: 16),
-              _buildAttendanceButton(
-                attendanceNowProvider,
-                clockInProvider,
-                context,
-              ),
             ],
           ),
         );
@@ -138,157 +120,6 @@ class _AttendanceCardWidgetState extends State<AttendanceCardWidget> {
     }
 
     return statusWidget;
-  }
-
-  Widget _buildAttendanceButton(
-    AttendanceNowProvider attendanceProvider,
-    ClockInAttendanceProvider clockInProvider,
-    BuildContext context,
-  ) {
-    // Tentukan teks tombol
-    String buttonText = "Rekam Hadir";
-    // Jika state error, tetapkan teks tombol ke "Rekam Hadir"
-    if (attendanceProvider.state is AttendanceNowErrorState) {
-      buttonText = "Rekam Hadir";
-    } else {
-      buttonText = attendanceProvider.buttonText;
-    }
-
-    if (clockInProvider.state is ClockInAttendanceLoadingState) {
-      return SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF86572D),
-            disabledBackgroundColor: Color(0xFF86572D).withAlpha(50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-          child: const SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              color: Colors.white,
-              strokeWidth: 2,
-            ),
-          ),
-        ),
-      );
-    }
-    // Button selalu diaktifkan jika dalam keadaan error
-    bool isEnabled =
-        attendanceProvider.state is AttendanceNowErrorState
-            ? true
-            : attendanceProvider.isButtonEnabled;
-
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed:
-            isEnabled
-                ? () {
-                  _handleAttendanceButtonPress(context);
-                }
-                : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF86572D),
-          disabledBackgroundColor: Color(0xFF86572D).withAlpha(50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-        ),
-        child: Text(
-          buttonText,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _handleAttendanceButtonPress(BuildContext context) {
-    final authProvider = context.read<AuthProvider>();
-    final clockInProvider = context.read<ClockInAttendanceProvider>();
-    final attendanceNowProvider = context.read<AttendanceNowProvider>();
-
-    if (authProvider.employee == null) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Data karyawan tidak tersedia'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    // Cek apakah ini rekam hadir atau rekam pulang
-    if (attendanceNowProvider.buttonText == "Rekam Hadir") {
-      // Proses rekam hadir
-      clockInProvider.clockInAttendance(
-        employee: authProvider.employee!,
-        onSuccess: () {
-          if (!context.mounted) return;
-          // Refresh attendance data
-          attendanceNowProvider.getAttendanceNow(
-            employee: authProvider.employee!,
-          );
-
-          // Tampilkan success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Berhasil merekam kehadiran'),
-              backgroundColor: Colors.green,
-            ),
-          );
-
-          // Navigasi ke riwayat presensi
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const PresenceHistoryNowScreen(),
-            ),
-          );
-        },
-        onError: (errorMessage) {
-          if (!context.mounted) return;
-          // Tampilkan error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Gagal merekam kehadiran: $errorMessage'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        },
-      );
-    } else {
-      // Ini adalah kasus rekam pulang, langsung arahkan ke halaman riwayat
-      try {
-        if (!context.mounted) return;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const PresenceHistoryNowScreen(),
-          ),
-        );
-      } catch (e) {
-        debugPrint("Error saat navigasi: $e");
-        if (!context.mounted) return;
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder:
-                (context, animation, secondaryAnimation) =>
-                    const PresenceHistoryNowScreen(),
-          ),
-        );
-      }
-    }
   }
 }
 

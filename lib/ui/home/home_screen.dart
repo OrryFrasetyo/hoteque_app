@@ -4,6 +4,7 @@ import 'package:hoteque_app/core/provider/profile/profile_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/home/widget/attendance_card_widget.dart';
+import 'package:hoteque_app/ui/home/widget/button_presence_widget.dart';
 import 'package:hoteque_app/ui/home/widget/today_schedule_widget.dart';
 import 'package:hoteque_app/ui/home/widget/employee_header_widget.dart';
 import 'package:hoteque_app/ui/home/widget/monthly_attendance_recap_widget.dart';
@@ -127,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 220,
+                    height: 200,
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -147,7 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 100),
+                  SizedBox(height: 60),
+                  const ButtonPresenceWidget(),
                   MonthlyAttendanceRecapWidget(),
                   SizedBox(height: 12),
                   Padding(

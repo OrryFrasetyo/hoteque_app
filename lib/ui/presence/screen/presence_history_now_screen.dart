@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class PresenceHistoryNowScreen extends StatelessWidget {
   const PresenceHistoryNowScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime(2025, 2, 3); // dummy date
     final timeIn = "07:59";
     final timeOut = "16:01";
     final duration = Duration(hours: 8, minutes: 1, seconds: 0);
@@ -24,43 +22,10 @@ class PresenceHistoryNowScreen extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back, color: Colors.brown),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Halo, Maxwell",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "Commis Chef - Hotelqu_",
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const CircleAvatar(
-                    radius: 24,
-                    backgroundImage: NetworkImage(
-                      'https://i.pravatar.cc/150?img=65',
-                    ),
-                  ),
                 ],
               ),
             ),
 
-            // TANGGAL
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "Rabu, ${DateFormat('dd-MM-yyyy').format(now)}",
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ),
-            ),
             const SizedBox(height: 16),
 
             // WAKTU HADIR & PULANG
