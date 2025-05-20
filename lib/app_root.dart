@@ -3,7 +3,7 @@ import 'package:hoteque_app/core/data/repository/position_repository.dart';
 import 'package:hoteque_app/core/data/repository/profile_repository.dart';
 import 'package:hoteque_app/core/data/repository/schedule_repository.dart';
 import 'package:hoteque_app/core/provider/attendance/attendance_three_days_provider.dart';
-import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_out_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position/position_provider.dart';
@@ -110,7 +110,7 @@ class AppRoot extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create:
-              (context) => ClockInAttendanceProvider(
+              (context) => ClockInOutAttendanceProvider(
                 context.read<AttendanceRepository>(),
               ),
         ),

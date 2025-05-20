@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_out_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
 import 'package:hoteque_app/ui/presence/widget/draggable_location_sheet.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
     super.initState();
     // Reset the ClockInAttendanceProvider state when entering this screen
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+      final clockInProvider = Provider.of<ClockInOutAttendanceProvider>(
         context,
         listen: false,
       );
@@ -30,15 +31,18 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LocationProvider>(
-      builder: (context, locationProvider, _) {
+    return Consumer2<LocationProvider, AttendanceNowProvider>(
+      builder: (context, locationProvider, attendanceNowProvider, _) {
+        // Tentukan judul berdasarkan status absensi
+        final String title = attendanceNowProvider.buttonText;
+        
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
             elevation: 0.5,
-            title: const Text(
-              "Rekam Hadir",
+            title: Text(
+              title,
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
             leading: IconButton(

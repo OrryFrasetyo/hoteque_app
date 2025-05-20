@@ -37,20 +37,40 @@ class AttendanceNowProvider extends ChangeNotifier {
   }
 
   // Getter untuk button text
+  // Tambahkan properti berikut di class AttendanceNowProvider
+  
   String get buttonText {
-    if (_attendanceNow == null || _attendanceNow!.clockIn == "--:--") {
-      return "Rekam Hadir";
-    } else if (_attendanceNow!.clockOut == "--:--") {
-      return "Rekam Pulang";
-    } else {
-      return "Rekam Pulang";
+    if (_state is AttendanceNowLoadedState) {
+      final attendanceNow = (_state as AttendanceNowLoadedState).attendanceNow;
+      
+      // Jika clock_in kosong, tampilkan "Rekam Hadir"
+      if (attendanceNow.clockIn.isEmpty) {
+        return "Rekam Hadir";
+      }
+      
+      // Jika clock_in ada tapi clock_out kosong, tampilkan "Rekam Pulang"
+      if (attendanceNow.clockIn.isNotEmpty && attendanceNow.clockOut.isEmpty) {
+        return "Rekam Pulang";
+      }
+      
+      // Jika keduanya sudah terisi, tampilkan "Absensi Selesai"
+      return "Absensi Selesai";
     }
+    
+    // Default text jika state bukan loaded
+    return "Rekam Hadir";
   }
-
-  // Getter untuk button enabled status
+  
   bool get isButtonEnabled {
-    if (_attendanceNow == null) return true;
-    return _attendanceNow!.clockOut == "--:--"; // Disable jika sudah clock out
+    if (_state is AttendanceNowLoadedState) {
+      final attendanceNow = (_state as AttendanceNowLoadedState).attendanceNow;
+      
+      // Tombol dinonaktifkan jika keduanya sudah terisi
+      return !(attendanceNow.clockIn.isNotEmpty && attendanceNow.clockOut.isNotEmpty);
+    }
+    
+    // Default enabled jika state bukan loaded
+    return true; // Disable jika sudah clock out
   }
 
   // Method untuk mendapatkan attendance now

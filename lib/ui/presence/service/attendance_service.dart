@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_out_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
@@ -36,7 +36,7 @@ class AttendanceService {
       }
 
       // Get clock in provider
-      final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+      final clockInProvider = Provider.of<ClockInOutAttendanceProvider>(
         context,
         listen: false,
       );

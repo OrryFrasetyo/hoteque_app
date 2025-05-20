@@ -1,16 +1,16 @@
-class ClockInAttendanceResponse {
+class ClockInOutAttendanceResponse {
   final Attendance attendance;
   final bool error;
   final String message;
 
-  ClockInAttendanceResponse({
+  ClockInOutAttendanceResponse({
     required this.attendance,
     required this.error,
     required this.message,
   });
 
-  factory ClockInAttendanceResponse.fromJson(Map<String, dynamic> json) =>
-      ClockInAttendanceResponse(
+  factory ClockInOutAttendanceResponse.fromJson(Map<String, dynamic> json) =>
+      ClockInOutAttendanceResponse(
         attendance: Attendance.fromJson(json["attendance"]),
         error: json["error"],
         message: json["message"],
@@ -31,7 +31,7 @@ class Attendance {
   final DateTime createdAt;
   final DateTime date;
   final String duration;
-  final EmployeeClockIn employee;
+  final EmployeeClockInOut employee;
   final int id;
   final Schedule schedule;
   final DateTime updatedAt;
@@ -58,7 +58,7 @@ class Attendance {
     createdAt: DateTime.parse(json["created_at"]),
     date: DateTime.parse(json["date"]),
     duration: json["duration"],
-    employee: EmployeeClockIn.fromJson(json["employee"]),
+    employee: EmployeeClockInOut.fromJson(json["employee"]),
     id: json["id"],
     schedule: Schedule.fromJson(json["schedule"]),
     updatedAt: DateTime.parse(json["updated_at"]),
@@ -79,15 +79,15 @@ class Attendance {
   };
 }
 
-class EmployeeClockIn {
+class EmployeeClockInOut {
   final int id;
   final String name;
   final String position;
 
-  EmployeeClockIn({required this.id, required this.name, required this.position});
+  EmployeeClockInOut({required this.id, required this.name, required this.position});
 
-  factory EmployeeClockIn.fromJson(Map<String, dynamic> json) =>
-      EmployeeClockIn(id: json["id"], name: json["name"], position: json["position"]);
+  factory EmployeeClockInOut.fromJson(Map<String, dynamic> json) =>
+      EmployeeClockInOut(id: json["id"], name: json["name"], position: json["position"]);
 
   Map<String, dynamic> toJson() => {
     "id": id,

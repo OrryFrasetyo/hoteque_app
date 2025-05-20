@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/core/data/networking/states/attendance/clock_in_attendance_result_state.dart';
-import 'package:hoteque_app/core/provider/attendance/clock_in_attendance_provider.dart';
+import 'package:hoteque_app/core/data/networking/states/attendance/clock_in_out_attendance_result_state.dart';
+import 'package:hoteque_app/core/provider/attendance/clock_in_out_attendance_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
+import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +40,7 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
     _controller.value = 0.0; // Start with minimum height
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+      final clockInProvider = Provider.of<ClockInOutAttendanceProvider>(
         context,
         listen: false,
       );
@@ -64,12 +65,16 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
   Widget build(BuildContext context) {
     final locationProvider = Provider.of<LocationProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final clockInProvider = Provider.of<ClockInAttendanceProvider>(context);
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final clockInProvider = Provider.of<ClockInOutAttendanceProvider>(context);
+    final attendanceNowProvider = Provider.of<AttendanceNowProvider>(context);
 
     setState(() {
-      _isSubmitting = clockInProvider.state is ClockInAttendanceLoadingState;
+      _isSubmitting = clockInProvider.state is ClockInOutAttendanceLoadingState;
     });
+
+    // Tentukan teks tombol berdasarkan status absensi
+    final String buttonText = attendanceNowProvider.buttonText;
+    final bool isClockOut = buttonText == "Rekam Pulang";
 
     return Positioned(
       bottom: 0,
@@ -221,6 +226,7 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
                                             ? null
                                             : () => _handleRecordAttendance(
                                               context,
+                                              isClockOut: isClockOut,
                                             ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xFF9F734A),
@@ -242,9 +248,9 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
                                                 strokeWidth: 2,
                                               ),
                                             )
-                                            : const Text(
-                                              'Rekam Hadir',
-                                              style: TextStyle(
+                                            : Text(
+                                              buttonText,
+                                              style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -267,7 +273,7 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
     );
   }
 
-  Future<void> _handleRecordAttendance(BuildContext context) async {
+  Future<void> _handleRecordAttendance(BuildContext context, {bool isClockOut = false}) async {
     // Get auth provider to access the employee data
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.employee == null) {
@@ -305,44 +311,82 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
     final formattedTime = DateFormat('HH:mm').format(now);
 
     // Get clock in provider
-    final clockInProvider = Provider.of<ClockInAttendanceProvider>(
+    final clockInProvider = Provider.of<ClockInOutAttendanceProvider>(
       context,
       listen: false,
     );
 
-    // Call the clock in method
-    await clockInProvider.clockInAttendance(
-      employee: authProvider.employee!,
-      onSuccess: () {
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Kehadiran berhasil dicatat"),
-            backgroundColor: Colors.green,
-          ),
-        );
+    // Tentukan apakah ini clock in atau clock out
+    if (isClockOut) {
+      // Panggil clock out
+      await clockInProvider.clockOutAttendance(
+        employee: authProvider.employee!,
+        onSuccess: () {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Rekam pulang berhasil dicatat"),
+              backgroundColor: Colors.green,
+            ),
+          );
 
-        // Navigate back to home screen
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          // Use Router for navigation
-          final routerDelegate = Router.of(context).routerDelegate;
-          if (routerDelegate is MyRouteDelegate) {
-            routerDelegate.navigateToHome();
-          } else {
-            // Fallback to Navigator if Router is not available
-            Navigator.of(context).pop();
-          }
-        });
-      },
-      onError: (errorMsg) {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Gagal mencatat kehadiran: $errorMsg"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      },
-    );
+          // Navigate back to home screen
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Use Router for navigation
+            final routerDelegate = Router.of(context).routerDelegate;
+            if (routerDelegate is MyRouteDelegate) {
+              routerDelegate.navigateToHome();
+            } else {
+              // Fallback to Navigator if Router is not available
+              Navigator.of(context).pop();
+            }
+          });
+        },
+        onError: (errorMsg) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Gagal mencatat rekam pulang: $errorMsg"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        },
+      );
+    } else {
+      // Panggil clock in
+      await clockInProvider.clockInAttendance(
+        employee: authProvider.employee!,
+        onSuccess: () {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Kehadiran berhasil dicatat"),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Navigate back to home screen
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Use Router for navigation
+            final routerDelegate = Router.of(context).routerDelegate;
+            if (routerDelegate is MyRouteDelegate) {
+              routerDelegate.navigateToHome();
+            } else {
+              // Fallback to Navigator if Router is not available
+              Navigator.of(context).pop();
+            }
+          });
+        },
+        onError: (errorMsg) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Gagal mencatat kehadiran: $errorMsg"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        },
+      );
+    }
   }
 }
