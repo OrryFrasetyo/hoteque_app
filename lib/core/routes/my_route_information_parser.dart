@@ -60,6 +60,14 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return AppRoutePath.mapsPresence();
     }
 
+    if (uri.pathSegments.first == 'maps_presence') {
+      return AppRoutePath.mapsPresence();
+    }
+
+    if (uri.pathSegments.first == 'add_schedule') {
+      return AppRoutePath.addSchedule();
+    }
+
     return AppRoutePath.unknown();
   }
 
@@ -118,6 +126,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
 
     if (configuration.isAttendanceMapsScreen) {
       return RouteInformation(uri: Uri.parse("/maps_presence"));
+    }
+
+    if (configuration.isAddScheduleScreen) {
+      return RouteInformation(uri: Uri.parse("/add_schedule"));
     }
 
     return RouteInformation(uri: Uri.parse("/"));

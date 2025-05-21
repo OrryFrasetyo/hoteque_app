@@ -3,7 +3,7 @@ import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_department_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/states/schedule/schedule_department_result_state.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_department_provider.dart';
-import 'package:hoteque_app/ui/schedule/add_schedule_screen.dart';
+import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/schedule/edit_schedule_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -89,22 +89,13 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddScheduleScreen(employee: widget.employee),
-            ),
+        onPressed: () {
+          // Menggunakan RouteDelegate untuk navigasi ke AddScheduleScreen
+          final routeDelegate = Provider.of<MyRouteDelegate>(
+            context, 
+            listen: false
           );
-          
-          // Refresh schedules if a new schedule was added
-          if (result == true) {
-            final provider = Provider.of<ScheduleDepartmentProvider>(
-              context,
-              listen: false,
-            );
-            provider.fetchSchedules(widget.employee);
-          }
+          routeDelegate.navigateToAddSchedule();
         },
         backgroundColor: Color(0xFF90612D),
         elevation: 0,

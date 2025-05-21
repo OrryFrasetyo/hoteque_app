@@ -9,6 +9,7 @@ import 'package:hoteque_app/ui/presence/screen/attendance_maps_screen.dart';
 import 'package:hoteque_app/ui/presence/screen/presence_history_screen.dart';
 import 'package:hoteque_app/ui/profile/edit_profile_screen.dart';
 import 'package:hoteque_app/ui/profile/profile_screen.dart';
+import 'package:hoteque_app/ui/schedule/add_schedule_screen.dart';
 import 'package:hoteque_app/ui/schedule/schedule_employee_screen.dart';
 import 'package:hoteque_app/ui/walkgrouth/welcome_screen.dart';
 
@@ -27,6 +28,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
   bool _isScheduleEmployeeScreen = false;
   bool _isPresenceScreen = false;
   bool _isAttendanceMapsScreen = false;
+  bool _isAddScheduleScreen = false;
   bool _isLoggedIn = false;
 
   Employee? _currentEmployee;
@@ -51,6 +53,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isScheduleEmployeeScreen = false;
       _isPresenceScreen = false;
       _isAttendanceMapsScreen = false;
+      _isAddScheduleScreen = false;
     } else if (_isLoggedIn) {
       _isWelcomeScreen = false;
       _isMainScreen = true;
@@ -60,6 +63,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isScheduleEmployeeScreen = false;
       _isPresenceScreen = false;
       _isAttendanceMapsScreen = false;
+      _isAddScheduleScreen = false;
     } else {
       _isWelcomeScreen = true;
       _isRegisterScreen = false;
@@ -69,6 +73,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
       _isScheduleEmployeeScreen = false;
       _isPresenceScreen = false;
       _isAttendanceMapsScreen = false;
+      _isAddScheduleScreen = false;
     }
     notifyListeners();
   }
@@ -85,7 +90,9 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   AppRoutePath get currentConfiguration {
-    if (_isAttendanceMapsScreen) {
+    if (_isAddScheduleScreen) {
+      return AppRoutePath.addSchedule();
+    } else if (_isAttendanceMapsScreen) {
       return AppRoutePath.mapsPresence();
     } else if (_isPresenceScreen) {
       return AppRoutePath.presenceEmployee();
@@ -108,6 +115,13 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   Future<bool> popRoute() async {
+    if (_isAddScheduleScreen) {
+      _isAddScheduleScreen = false;
+      _isScheduleEmployeeScreen = true;
+      notifyListeners();
+      return true;
+    }
+
     if (_isAttendanceMapsScreen) {
       _isAttendanceMapsScreen = false;
       _isMainScreen = true;
@@ -221,6 +235,13 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
     notifyListeners();
   }
 
+  void navigateToAddSchedule() {
+    _isAddScheduleScreen = true;
+    _isScheduleEmployeeScreen = false;
+    _currentEmployee = _currentEmployee;
+    notifyListeners();
+  }
+
   void navigateToPresence() {
     _isPresenceScreen = true;
     _isMainScreen = false;
@@ -254,6 +275,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isScheduleEmployeeScreen = false;
         _isPresenceScreen = false;
         _isAttendanceMapsScreen = false;
+        _isAddScheduleScreen = false;
       } else {
         _isWelcomeScreen = true;
         _isLoginScreen = false;
@@ -263,6 +285,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isScheduleEmployeeScreen = false;
         _isPresenceScreen = false;
         _isAttendanceMapsScreen = false;
+        _isAddScheduleScreen = false;
       }
     }
 
@@ -386,6 +409,19 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
               },
             ),
           ),
+
+        if (_isAddScheduleScreen && _currentEmployee != null)
+          MaterialPage(
+            key: ValueKey("AddScheduleScreen"),
+            child: AddScheduleScreen(
+              employee: _currentEmployee!,
+              onBack: () {
+                _isAddScheduleScreen = false;
+                _isScheduleEmployeeScreen = true;
+                notifyListeners();
+              },
+            ),
+          ),
       ],
       onDidRemovePage: (page) {
         if (page.key == ValueKey("RegisterPage")) {
@@ -473,7 +509,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isProfileScreen = true;
         _isPresenceScreen = false;
         _isAttendanceMapsScreen = false;
-      _isScheduleEmployeeScreen = false;
+        _isScheduleEmployeeScreen = false;
       } else {
         _isWelcomeScreen = true;
         _isLoginScreen = false;
@@ -482,7 +518,7 @@ class MyRouteDelegate extends RouterDelegate<AppRoutePath>
         _isProfileScreen = false;
         _isPresenceScreen = false;
         _isAttendanceMapsScreen = false;
-      _isScheduleEmployeeScreen = false;
+        _isScheduleEmployeeScreen = false;
       }
     } else if (path.isScheduleEmployeeScreen) {
       if (_isLoggedIn) {

@@ -9,9 +9,14 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:provider/provider.dart';
 
 class AddScheduleScreen extends StatefulWidget {
+  final VoidCallback onBack;
   final Employee? employee;
 
-  const AddScheduleScreen({super.key, this.employee});
+  const AddScheduleScreen({
+    super.key, 
+    this.employee, 
+    required this.onBack
+  });
 
   @override
   State<AddScheduleScreen> createState() => _AddScheduleScreenState();
@@ -57,7 +62,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
 
       if (success) {
         // Navigate back to schedule employee screen
-        Navigator.pop(context, true);
+        widget.onBack();
       }
     }
   }
@@ -78,7 +83,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            widget.onBack();
           },
           icon: Icon(Icons.arrow_back, color: Colors.black),
         ),
@@ -90,7 +95,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               child: CircularProgressIndicator(color: const Color(0xFF90612D)),
             );
           }
-
+    
           if (provider.state is AddScheduleErrorState) {
             final errorState = provider.state as AddScheduleErrorState;
             return Center(
@@ -122,7 +127,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               ),
             );
           }
-
+    
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
