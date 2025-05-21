@@ -8,9 +8,12 @@ import 'package:hoteque_app/core/data/networking/response/attendance/attendance_
 import 'package:hoteque_app/core/data/networking/response/attendance/clock_in_out_attendance_response.dart';
 import 'package:hoteque_app/core/data/networking/response/profile_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/position_response.dart';
+import 'package:hoteque_app/core/data/networking/response/schedule/add_schedule_response.dart';
+import 'package:hoteque_app/core/data/networking/response/schedule/employee_in_department_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_today_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_department_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/response/shift/shift_response.dart';
 import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/response/login_response.dart';
 import 'package:hoteque_app/core/data/networking/util/api_response.dart';
@@ -249,6 +252,77 @@ class ApiServices {
       } else {
         final json = jsonDecode(response.body);
         final message = json["message"] ?? "Failed to get department schedule";
+        throw Exception(message);
+      }
+    });
+  }
+
+  Future<ApiResponse<EmployeeInDepartmentResponse>> getAllEmployeeDepartment({
+    required Employee employee,
+  }) async {
+    return await executeSafely(() async {
+      final response = await httpClient.get(
+        Uri.parse("$_baseUrl/employees"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${employee.token}',
+        },
+      );
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return EmployeeInDepartmentResponse.fromJson(json);
+      } else {
+        final message = json["message"] ?? "Failed to fetch employees";
+        throw Exception(message);
+      }
+    });
+  }
+
+  Future<ApiResponse<AddScheduleResponse>> createScheduleEmployee({
+    required Employee employee,
+    required int employeeId,
+    required int shiftId,
+    required String dateSchedule,
+    required String status,
+  }) async {
+    return await executeSafely(() async {
+      final Map<String, dynamic> data = {
+        "employee_id": employeeId,
+        "shift_id": shiftId,
+        "date_schedule": dateSchedule,
+        "status": status,
+      };
+
+      final response = await httpClient.post(
+        Uri.parse("$_baseUrl/schedules"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${employee.token}",
+        },
+        body: jsonEncode(data),
+      );
+
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return AddScheduleResponse.fromJson(json);
+      } else {
+        final message = json["message"] ?? "Gagal membuat jadwal";
+        throw Exception(message);
+      }
+    });
+  }
+
+  Future<ApiResponse<ShiftResponse>> getAllShifts() async {
+    return await executeSafely(() async {
+      final response = await httpClient.get(Uri.parse("$_baseUrl/shifts"));
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return ShiftResponse.fromJson(json);
+      } else {
+        final message = json["message"] ?? "Failed to fetch shifts";
         throw Exception(message);
       }
     });

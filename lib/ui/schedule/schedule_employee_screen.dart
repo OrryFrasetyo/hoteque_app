@@ -89,11 +89,22 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddScheduleScreen()),
+            MaterialPageRoute(
+              builder: (context) => AddScheduleScreen(employee: widget.employee),
+            ),
           );
+          
+          // Refresh schedules if a new schedule was added
+          if (result == true) {
+            final provider = Provider.of<ScheduleDepartmentProvider>(
+              context,
+              listen: false,
+            );
+            provider.fetchSchedules(widget.employee);
+          }
         },
         backgroundColor: Color(0xFF90612D),
         elevation: 0,

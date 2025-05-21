@@ -8,6 +8,7 @@ import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position/position_provider.dart';
 import 'package:hoteque_app/core/provider/profile/profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/add_schedule_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_department_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_employee_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
@@ -91,6 +92,11 @@ class AppRoot extends StatelessWidget {
               (context) => ScheduleDepartmentProvider(
                 context.read<ScheduleRepository>(),
               ),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) =>
+                  AddScheduleProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
           create:
