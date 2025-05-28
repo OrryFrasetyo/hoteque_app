@@ -4,7 +4,9 @@ import 'package:hoteque_app/core/data/networking/response/schedule/employee_in_d
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_department_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_today_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/response/schedule/update_schedule_response.dart';
 import 'package:hoteque_app/core/data/networking/response/shift/shift_response.dart';
+import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/service/api_services.dart';
 import 'package:hoteque_app/core/data/networking/util/api_response.dart';
 
@@ -55,6 +57,32 @@ class ScheduleRepository {
       shiftId: shiftId,
       dateSchedule: dateSchedule,
       status: status,
+    );
+  }
+
+  Future<ApiResponse<UpdateScheduleResponse>> updateScheduleEmployee({
+    required Employee employee,
+    required int scheduleId,
+    required int shiftId,
+    required String dateSchedule,
+    String? status,
+  }) async {
+    return await _apiServices.updateScheduleEmployee(
+      employee: employee,
+      scheduleId: scheduleId,
+      shiftId: shiftId,
+      dateSchedule: dateSchedule,
+      status: status,
+    );
+  }
+
+  Future<ApiResponse<SimpleResponse>> deleteScheduleEmployee({
+    required Employee employee,
+    required int scheduleId,
+  }) async {
+    return await _apiServices.deleteScheduleEmployee(
+      employee: employee,
+      scheduleId: scheduleId,
     );
   }
 

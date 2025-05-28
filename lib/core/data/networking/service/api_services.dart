@@ -13,6 +13,7 @@ import 'package:hoteque_app/core/data/networking/response/schedule/employee_in_d
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_today_employee_response.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_department_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/response/schedule/update_schedule_response.dart';
 import 'package:hoteque_app/core/data/networking/response/shift/shift_response.dart';
 import 'package:hoteque_app/core/data/networking/response/simple_response.dart';
 import 'package:hoteque_app/core/data/networking/response/login_response.dart';
@@ -309,6 +310,67 @@ class ApiServices {
         return AddScheduleResponse.fromJson(json);
       } else {
         final message = json["message"] ?? "Gagal membuat jadwal";
+        throw Exception(message);
+      }
+    });
+  }
+
+  Future<ApiResponse<UpdateScheduleResponse>> updateScheduleEmployee({
+    required Employee employee,
+    required int scheduleId,
+    required int shiftId,
+    required String dateSchedule,
+    String? status,
+  }) async {
+    return await executeSafely(() async {
+      final Map<String, dynamic> data = {
+        "shift_id": shiftId,
+        "date_schedule": dateSchedule,
+      };
+
+      if (status != null) {
+        data["status"] = status;
+      }
+
+      final response = await httpClient.put(
+        Uri.parse("$_baseUrl/schedules/$scheduleId"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${employee.token}",
+        },
+        body: jsonEncode(data),
+      );
+
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return UpdateScheduleResponse.fromJson(json);
+      } else {
+        final message = json["message"] ?? "Gagal mengupdate jadwal.";
+        throw Exception(message);
+      }
+    });
+  }
+
+  Future<ApiResponse<SimpleResponse>> deleteScheduleEmployee({
+    required Employee employee,
+    required int scheduleId,
+  }) async {
+    return await executeSafely(() async {
+      final response = await httpClient.delete(
+        Uri.parse("$_baseUrl/schedules/$scheduleId"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${employee.token}",
+        },
+      );
+
+      final json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        return SimpleResponse.fromJson(json);
+      } else {
+        final message = json["message"] ?? "Gagal hapus jadwal.";
         throw Exception(message);
       }
     });

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/schedule/schedule_department_employee_response.dart';
+import 'package:hoteque_app/core/data/networking/states/schedule/delete_schedule_result_state.dart';
 import 'package:hoteque_app/core/data/networking/states/schedule/schedule_department_result_state.dart';
+import 'package:hoteque_app/core/provider/schedule/delete_schedule_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_department_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/schedule/edit_schedule_screen.dart';
@@ -215,6 +217,7 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
     Color? statusColor;
     if (schedule.status == 'Izin') statusColor = Colors.amber;
     if (schedule.status == 'Alpa') statusColor = Colors.redAccent;
+    if (schedule.status == 'Sakit') statusColor = Colors.orange;
 
     // Format time from shift
     final time = "${schedule.shift.clockIn} - ${schedule.shift.clockOut}";
@@ -274,7 +277,6 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
                     IconButton(
                       icon: const Icon(Icons.delete, color: Color(0xFF90612D)),
                       onPressed: () {
-                        // TODO: Implement delete functionality
                         _showDeleteConfirmation(schedule);
                       },
                     ),
@@ -284,20 +286,19 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder:
-                                (context) => EditScheduleScreen(
-                                  scheduleData: _convertToScheduleMap(schedule),
-                                  scheduleIndex: index,
-                                  onUpdate: (_) {
-                                    // Refresh schedules after update
-                                    final provider =
-                                        Provider.of<ScheduleDepartmentProvider>(
-                                          context,
-                                          listen: false,
-                                        );
-                                    provider.fetchSchedules(widget.employee);
-                                  },
-                                ),
+                            builder: (context) => EditScheduleScreen(
+                              employee: widget.employee,
+                              scheduleData: _convertToScheduleMap(schedule),
+                              scheduleIndex: index,
+                              onUpdate: (_) {
+                                // Refresh schedules after update
+                                final provider = Provider.of<ScheduleDepartmentProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                                provider.fetchSchedules(widget.employee);
+                              },
+                            ),
                           ),
                         );
                       },
@@ -321,39 +322,96 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
       'time': '${schedule.shift.clockIn} - ${schedule.shift.clockOut}',
       'status': schedule.status,
       'id': schedule.id,
+      'dateSchedule': schedule.dateSchedule,
     };
   }
 
   void _showDeleteConfirmation(Schedule schedule) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Konfirmasi'),
-            content: const Text(
-              'Apakah Anda yakin ingin menghapus jadwal ini?',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Batal'),
-              ),
-              TextButton(
-                onPressed: () {
-                  // TODO: Implement delete API call
-                  Navigator.pop(context);
-                  // After delete, refresh the schedule list
+      builder: (context) => AlertDialog(
+        title: const Text('Konfirmasi'),
+        content: const Text(
+          'Apakah Anda yakin ingin menghapus jadwal ini?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context); // Tutup dialog
+              
+              // Tampilkan loading dialog
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(color: Color(0xFF90612D)),
+                      SizedBox(height: 16),
+                      Text('Menghapus jadwal...'),
+                    ],
+                  ),
+                ),
+              );
+              
+              // Panggil provider untuk menghapus jadwal
+              final deleteProvider = Provider.of<DeleteScheduleProvider>(
+                context,
+                listen: false,
+              );
+              
+              final success = await deleteProvider.deleteSchedule(
+                employee: widget.employee,
+                scheduleId: schedule.id,
+              );
+              
+              // Tutup dialog loading
+              if (mounted) Navigator.pop(context);
+              
+              // Tampilkan snackbar berdasarkan hasil
+              if (mounted) {
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Jadwal berhasil dihapus'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  
+                  // Refresh jadwal setelah berhasil dihapus
                   final provider = Provider.of<ScheduleDepartmentProvider>(
                     context,
                     listen: false,
                   );
                   provider.fetchSchedules(widget.employee);
-                },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('Hapus'),
-              ),
-            ],
+                } else {
+                  // Ambil pesan error dari state
+                  final state = deleteProvider.state;
+                  String errorMessage = 'Gagal menghapus jadwal';
+                  
+                  if (state is DeleteScheduleErrorState) {
+                    errorMessage = state.message;
+                  }
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(errorMessage),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Hapus'),
           ),
+        ],
+      ),
     );
   }
 }

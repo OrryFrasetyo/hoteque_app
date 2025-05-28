@@ -235,7 +235,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

@@ -9,11 +9,13 @@ import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/provider/position/position_provider.dart';
 import 'package:hoteque_app/core/provider/profile/profile_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/add_schedule_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/delete_schedule_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_department_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_employee_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/time_provider.dart';
 import 'package:hoteque_app/core/provider/profile/update_profile_provider.dart';
+import 'package:hoteque_app/core/provider/schedule/update_schedule_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/my_app.dart';
 import 'package:http/http.dart' as http;
@@ -97,6 +99,16 @@ class AppRoot extends StatelessWidget {
           create:
               (context) =>
                   AddScheduleProvider(context.read<ScheduleRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) =>
+                  UpdateScheduleProvider(context.read<ScheduleRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) =>
+                  DeleteScheduleProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
           create:
