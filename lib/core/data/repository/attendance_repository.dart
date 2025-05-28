@@ -1,3 +1,4 @@
+import 'package:hoteque_app/core/data/networking/response/attendance/attendance_by_status_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_month_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_now_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_three_days_ago_response.dart';
@@ -46,6 +47,18 @@ class AttendanceRepository {
     return await _apiServices.clockOutAttendance(
       employee: employee,
       clockOut: clockOut,
+    );
+  }
+
+  Future<ApiResponse<AttendanceByStatusResponse>> getAttendanceByStatus({
+    required Employee employee,
+    String? clockInStatus,
+    String? clockOutStatus,
+  }) async {
+    return await _apiServices.getAttendanceByStatus(
+      employee: employee,
+      clockInStatus: clockInStatus,
+      clockOutStatus: clockOutStatus,
     );
   }
 }
