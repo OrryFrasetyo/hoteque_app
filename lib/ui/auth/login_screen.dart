@@ -75,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return Scaffold(
+          extendBodyBehindAppBar: false,
           body: Center(
             child: SingleChildScrollView(
               child: Padding(

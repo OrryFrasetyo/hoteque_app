@@ -11,6 +11,7 @@ class AppRoutePath {
   final bool isPresenceScreen;
   final bool isAttendanceMapsScreen;
   final bool isAddScheduleScreen;
+  final bool isAttendanceByStatusScreen;
 
   AppRoutePath.welcome()
     : isWelcomeScreen = true,
@@ -23,6 +24,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -37,6 +39,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -51,6 +54,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -65,6 +69,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false;
 
   AppRoutePath.unknown()
@@ -78,6 +83,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = true,
       tabIndex = null;
 
@@ -92,6 +98,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -106,6 +113,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -120,6 +128,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -134,6 +143,7 @@ class AppRoutePath {
       isPresenceScreen = true,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -148,6 +158,7 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = true,
       isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
 
@@ -162,6 +173,23 @@ class AppRoutePath {
       isPresenceScreen = false,
       isAttendanceMapsScreen = false,
       isAddScheduleScreen = true,
+      isAttendanceByStatusScreen = false,
       isUnknown = false,
       tabIndex = null;
+
+  AppRoutePath.attendanceByStatus()
+    : isWelcomeScreen = false,
+      isRegisterScreen = false,
+      isLoginScreen = false,
+      isMainScreen = false,
+      isProfileScreen = false,
+      isEditProfileScreen = false,
+      isScheduleEmployeeScreen = false,
+      isPresenceScreen = false,
+      isAttendanceMapsScreen = false,
+      isAddScheduleScreen = false,
+      isAttendanceByStatusScreen = true,
+      isUnknown = false,
+      tabIndex = null;
+  
 }

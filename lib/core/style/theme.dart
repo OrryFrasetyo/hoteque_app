@@ -377,6 +377,7 @@ class MaterialTheme {
         contentTextStyle: TextStyle(
           fontWeight: FontWeight.w400,
           color: baseTheme.colorScheme.onSurface,
+          fontFamily: "Quicksand"
         ),
       ),
     );

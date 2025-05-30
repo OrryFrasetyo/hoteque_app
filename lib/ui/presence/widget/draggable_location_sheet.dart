@@ -5,7 +5,7 @@ import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DraggableLocationSheet extends StatefulWidget {
@@ -307,8 +307,8 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
     }
 
     // Get current time in HH:mm format
-    final now = DateTime.now();
-    final formattedTime = DateFormat('HH:mm').format(now);
+    // final now = DateTime.now();
+    // final formattedTime = DateFormat('HH:mm').format(now);
 
     // Get clock in provider
     final clockInProvider = Provider.of<ClockInOutAttendanceProvider>(

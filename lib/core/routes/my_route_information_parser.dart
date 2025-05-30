@@ -68,6 +68,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
       return AppRoutePath.addSchedule();
     }
 
+    if (uri.pathSegments.first == 'attendance_by_status') {
+      return AppRoutePath.attendanceByStatus();
+    }
+
     return AppRoutePath.unknown();
   }
 
@@ -130,6 +134,10 @@ class MyRouteInformationParser extends RouteInformationParser<AppRoutePath> {
 
     if (configuration.isAddScheduleScreen) {
       return RouteInformation(uri: Uri.parse("/add_schedule"));
+    }
+
+    if (configuration.isAttendanceByStatusScreen) {
+      return RouteInformation(uri: Uri.parse("/attendance_by_status"));
     }
 
     return RouteInformation(uri: Uri.parse("/"));

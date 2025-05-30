@@ -44,72 +44,64 @@ class _PresenceHistoryScreenState extends State<PresenceHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Custom AppBar
-            Padding(
-              padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.brown),
-                    onPressed: widget.onBack,
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Riwayat Absensi',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(width: 48), // Balance space dari back button
-                ],
-              ),
-            ),
-
-            SizedBox(height: 8),
-
-            Consumer2<AttendanceMonthProvider, AuthProvider>(
-              builder: (context, attendanceProvider, authProvider, _) {
-                // If there's an error in the attendance state, we provide retry functionality
-                if (attendanceProvider.state is AttendanceMonthErrorState) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Icon(Icons.error_outline, color: Colors.red, size: 48),
-                        const SizedBox(height: 8),
-                        Text(
-                          (attendanceProvider.state
-                                  as AttendanceMonthErrorState)
-                              .message,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (authProvider.employee != null) {
-                              attendanceProvider.getAttendanceMonth(
-                                employee: authProvider.employee!,
-                              );
-                            }
-                          },
-                          child: Text('Coba Lagi'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return AttendanceMonthWidget();
-              },
-            ),
-          ],
+      // Tambahkan properti appBar untuk memastikan status bar muncul
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          onPressed: widget.onBack,
         ),
+        title: Text(
+          'Riwayat Absensi',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          SizedBox(height: 8),
+
+          Consumer2<AttendanceMonthProvider, AuthProvider>(
+            builder: (context, attendanceProvider, authProvider, _) {
+              // If there's an error in the attendance state, we provide retry functionality
+              if (attendanceProvider.state is AttendanceMonthErrorState) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red, size: 48),
+                      const SizedBox(height: 8),
+                      Text(
+                        (attendanceProvider.state
+                                as AttendanceMonthErrorState)
+                            .message,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (authProvider.employee != null) {
+                            attendanceProvider.getAttendanceMonth(
+                              employee: authProvider.employee!,
+                            );
+                          }
+                        },
+                        child: Text('Coba Lagi'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return AttendanceMonthWidget();
+            },
+          ),
+        ],
       ),
     );
   }

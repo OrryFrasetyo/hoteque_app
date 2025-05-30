@@ -49,12 +49,12 @@ class AttendanceHistoryWidget extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  Icon(Icons.event_busy, color: Colors.grey, size: 48),
+                  Icon(Icons.event_busy, color: Color(0xFF8B5A2B), size: 48),
                   const SizedBox(height: 8),
                   Text(
                     'Tidak ada data absensi',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ],
               ),

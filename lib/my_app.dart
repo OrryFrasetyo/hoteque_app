@@ -16,8 +16,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: "Hotelque",
       theme: theme.lightWithCustomStyles(),
-      // darkTheme: theme.dark,
-      // themeMode: ,
       debugShowCheckedModeBanner: true,
       routeInformationParser: context.read<MyRouteInformationParser>(),
       routerDelegate: context.read<MyRouteDelegate>(),

@@ -69,12 +69,12 @@ class TodayScheduleWidget extends StatelessWidget {
             child: Center(
               child: Column(
                 children: [
-                  Icon(Icons.event_busy, size: 32, color: Colors.grey),
+                  Icon(Icons.event_busy, size: 32, color: Color(0xFF8B5A2B)),
                   SizedBox(height: 8),
                   Text(
                     "Tidak ada jadwal hari ini",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12, color: Colors.black),
                   ),
                 ],
               ),

@@ -8,6 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: false,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -55,7 +56,6 @@ class WelcomeScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        fontFamily: "Quicksand",
                       ),
                     ),
                   ),

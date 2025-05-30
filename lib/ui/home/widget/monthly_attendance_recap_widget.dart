@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hoteque_app/core/provider/attendance/attendance_month_provider.dart';
 import 'package:hoteque_app/core/provider/auth/auth_provider.dart';
+import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/ui/home/widget/recap_item_widget.dart';
-import 'package:hoteque_app/ui/presence/screen/attendance_by_status_screen.dart';
 import 'package:provider/provider.dart';
 
 class MonthlyAttendanceRecapWidget extends StatefulWidget {
@@ -70,17 +70,14 @@ class _MonthlyAttendanceRecapWidgetState
     String statusValue,
     String title,
   ) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder:
-            (context) => AttendanceByStatusScreen(
-              statusType: statusType,
-              statusValue: statusValue,
-              title: title,
-            ),
-      ),
-    );
+    final routeDelegate = Router.of(context).routerDelegate as MyRouteDelegate;
+
+    routeDelegate.statusType = statusType;
+    routeDelegate.statusValue = statusValue;
+    routeDelegate.statusTitle = title;
+
+    // Navigasi menggunakan Navigation 2.0
+    routeDelegate.navigateToAttendanceByStatus();
   }
 
   @override

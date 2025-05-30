@@ -11,9 +11,11 @@ class AttendanceByStatusResponse {
 
   factory AttendanceByStatusResponse.fromJson(Map<String, dynamic> json) =>
       AttendanceByStatusResponse(
-        attendances: List<AttendanceStatus>.from(
-          json["attendances"].map((x) => AttendanceStatus.fromJson(x)),
-        ),
+        attendances: json["attendances"] != null
+            ? List<AttendanceStatus>.from(
+                json["attendances"].map((x) => AttendanceStatus.fromJson(x)),
+              )
+            : [], // Kembalikan array kosong jika attendances null
         error: json["error"],
         message: json["message"],
       );
