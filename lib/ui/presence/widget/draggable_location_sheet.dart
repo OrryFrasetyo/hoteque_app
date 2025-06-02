@@ -294,6 +294,42 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
       context,
       listen: false,
     );
+    
+    // Periksa apakah lokasi dipalsukan
+    if (locationProvider.isMockLocation) {
+      // Tampilkan dialog peringatan fake GPS
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Fake GPS Terdeteksi'),
+            content: const Text(
+              'Aplikasi mendeteksi Anda menggunakan fake GPS. '
+              'Fitur absensi tidak dapat digunakan dengan fake GPS.',
+            ),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Navigasi kembali ke home screen
+                  final routerDelegate = Router.of(context).routerDelegate;
+                  if (routerDelegate is MyRouteDelegate) {
+                    routerDelegate.navigateToHome();
+                  } else {
+                    // Fallback ke Navigator jika Router tidak tersedia
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+    
     final withinRadius = locationProvider.isWithinOfficeRadius();
 
     if (!withinRadius) {

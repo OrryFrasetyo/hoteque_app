@@ -4,6 +4,7 @@ import 'package:hoteque_app/core/provider/attendance/clock_in_out_attendance_pro
 import 'package:hoteque_app/core/provider/attendance/location_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/attendance_now_provider.dart';
 import 'package:hoteque_app/ui/presence/widget/draggable_location_sheet.dart';
+import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:provider/provider.dart';
 
 class AttendanceMapsScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class AttendanceMapsScreen extends StatefulWidget {
 }
 
 class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
+  bool _hasCheckedMockLocation = false;
+
   @override
   void initState() {
     super.initState();
@@ -26,13 +29,69 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
         listen: false,
       );
       clockInProvider.resetState();
+      
+      // Periksa fake GPS setelah widget dibangun
+      _checkMockLocation();
     });
+  }
+  
+  // Method untuk memeriksa fake GPS
+  Future<void> _checkMockLocation() async {
+    if (_hasCheckedMockLocation) return;
+    
+    final locationProvider = Provider.of<LocationProvider>(context, listen: false);
+    await Future.delayed(const Duration(seconds: 2)); // Beri waktu untuk mendapatkan lokasi
+    
+    if (locationProvider.isMockLocation) {
+      _hasCheckedMockLocation = true;
+      _showMockLocationDialog();
+    }
+  }
+  
+  // Method untuk menampilkan dialog peringatan fake GPS
+  void _showMockLocationDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Fake GPS Terdeteksi'),
+          content: const Text(
+            'Aplikasi mendeteksi Anda menggunakan fake GPS. '
+            'Fitur absensi tidak dapat digunakan dengan fake GPS.',
+          ),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Navigasi kembali ke home screen
+                final routerDelegate = Router.of(context).routerDelegate;
+                if (routerDelegate is MyRouteDelegate) {
+                  routerDelegate.navigateToHome();
+                } else {
+                  // Fallback ke Navigator jika Router tidak tersedia
+                  widget.onBack();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer2<LocationProvider, AttendanceNowProvider>(
       builder: (context, locationProvider, attendanceNowProvider, _) {
+        // Periksa fake GPS setiap kali lokasi berubah
+        if (locationProvider.isMockLocation && !_hasCheckedMockLocation) {
+          _hasCheckedMockLocation = true;
+          // Gunakan Future.microtask untuk menghindari build errors
+          Future.microtask(() => _showMockLocationDialog());
+        }
+        
         // Tentukan judul berdasarkan status absensi
         final String title = attendanceNowProvider.buttonText;
         

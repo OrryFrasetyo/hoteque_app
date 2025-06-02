@@ -19,6 +19,7 @@ class LocationProvider extends ChangeNotifier {
   String _currentAddress = "Appskep Indonesia, Kec. Kuranji, Kota Padang";
   bool _isLoading = false;
   double _currentZoom = 18.0;
+  bool _isMockLocation = false; // Tambahkan variabel untuk status fake GPS
 
   LocationProvider()
     : _currentLocation = const LatLng(-0.914133401830605, 100.40204405577474);
@@ -28,6 +29,7 @@ class LocationProvider extends ChangeNotifier {
   LatLng get currentLocation => _currentLocation;
   String get currentAddress => _currentAddress;
   bool get isLoading => _isLoading;
+  bool get isMockLocation => _isMockLocation; // Getter untuk status fake GPS
 
   void setMapController(GoogleMapController controller) async {
     _mapController = controller;
@@ -100,6 +102,11 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      // Periksa apakah lokasi dipalsukan
+      _isMockLocation = await _locationService.isMockLocationEnabled();
+      
+      // Jika lokasi dipalsukan, tetap dapatkan lokasi untuk ditampilkan
+      // tapi tandai bahwa ini adalah lokasi palsu
       final location = await _locationService.getCurrentLocation();
 
       if (location != null) {

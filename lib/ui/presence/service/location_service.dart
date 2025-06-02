@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as location_pkg;
+import 'package:geolocator/geolocator.dart' as geolocator;
 
 class LocationService {
   static final LocationService _instance = LocationService._internal();
@@ -41,6 +42,26 @@ class LocationService {
     } catch (e) {
       debugPrint('Error getting location: $e');
       return null;
+    }
+  }
+
+  // Tambahkan method untuk memeriksa apakah lokasi dipalsukan
+  Future<bool> isMockLocationEnabled() async {
+    try {
+      // Gunakan geolocator untuk mendapatkan posisi dengan properti isMocked
+      final geolocator.LocationSettings locationSettings = geolocator.LocationSettings(
+        accuracy: geolocator.LocationAccuracy.high,
+      );
+      
+      final geolocator.Position position = await geolocator.Geolocator.getCurrentPosition(
+        locationSettings: locationSettings
+      );
+      
+      // Periksa apakah lokasi dipalsukan
+      return position.isMocked;
+    } catch (e) {
+      debugPrint('Error checking mock location: $e');
+      return false;
     }
   }
 
