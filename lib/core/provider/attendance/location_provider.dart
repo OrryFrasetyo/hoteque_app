@@ -73,7 +73,7 @@ class LocationProvider extends ChangeNotifier {
         circleId: const CircleId("officeRadius"),
         center: appskepOffice,
         radius: officeRadius,
-        fillColor: Colors.blue.withOpacity(0.2),
+        fillColor: Colors.blue.withAlpha(20),
         strokeColor: Colors.blue,
         strokeWidth: 1,
       ),

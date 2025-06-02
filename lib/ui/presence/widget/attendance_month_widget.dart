@@ -102,9 +102,6 @@ class AttendanceMonthWidget extends StatelessWidget {
               },
             ),
           ),
-
-          // Initial state or fallback
-          _ => const SizedBox.shrink(),
         };
       },
     );

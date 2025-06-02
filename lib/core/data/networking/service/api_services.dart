@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:hoteque_app/core/data/model/employee.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_by_status_response.dart';
 import 'package:hoteque_app/core/data/networking/response/attendance/attendance_month_response.dart';
@@ -433,9 +434,21 @@ class ApiServices {
       if (response.statusCode == 201 || response.statusCode == 200) {
         return ClockInOutAttendanceResponse.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception(
-          'Failed to clock in attendance now. Status code: ${response.statusCode}',
-        );
+        String errorMessage =
+            'Failed to clock in attendance. Status code: ${response.statusCode}';
+
+        try {
+          final errorResponse = jsonDecode(response.body);
+          if (errorResponse is Map<String, dynamic> &&
+              errorResponse.containsKey('message')) {
+            errorMessage = errorResponse['message'];
+          }
+        } catch (e) {
+          // Jika gagal parse response body, gunakan pesan default
+          debugPrint('Failed to parse error response: $e');
+        }
+
+        throw Exception(errorMessage);
       }
     });
   }
@@ -519,16 +532,18 @@ class ApiServices {
   }) async {
     return await executeSafely(() async {
       final queryParams = <String, String>{};
-      
+
       if (clockInStatus != null) {
         queryParams['clock_in_status'] = clockInStatus;
       }
-      
+
       if (clockOutStatus != null) {
         queryParams['clock_out_status'] = clockOutStatus;
       }
 
-      final uri = Uri.parse("$_baseUrl/attendance/status?").replace(queryParameters: queryParams);
+      final uri = Uri.parse(
+        "$_baseUrl/attendance/status?",
+      ).replace(queryParameters: queryParams);
       final response = await httpClient.get(
         uri,
         headers: {

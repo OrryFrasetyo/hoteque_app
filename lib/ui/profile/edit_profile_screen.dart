@@ -311,7 +311,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundImage: NetworkImage(provider.photoUrl),
         onBackgroundImageError: (exception, stackTrace) {
           // Handle error loading image
-          print("Error loading profile image: $exception");
+          debugPrint("Error loading profile image: $exception");
         },
       );
     }

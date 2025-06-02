@@ -69,6 +69,9 @@ class _EditScheduleScreenState extends State<EditScheduleScreen> {
       
       final success = await provider.updateSchedule(widget.employee, scheduleId);
       
+      // Periksa apakah widget masih terpasang setelah operasi asinkron
+      if (!mounted) return;
+      
       setState(() {
         _isLoading = false;
       });

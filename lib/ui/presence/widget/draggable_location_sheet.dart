@@ -273,7 +273,10 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
     );
   }
 
-  Future<void> _handleRecordAttendance(BuildContext context, {bool isClockOut = false}) async {
+  Future<void> _handleRecordAttendance(
+    BuildContext context, {
+    bool isClockOut = false,
+  }) async {
     // Get auth provider to access the employee data
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.employee == null) {
@@ -344,10 +347,20 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
         },
         onError: (errorMsg) {
           // Show error message
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text("Gagal mencatat rekam pulang: $errorMsg"),
+          //     backgroundColor: Colors.red,
+          //   ),
+          // );
+          String displayMessage = _extractErrorMessage(errorMsg);
+
+          // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Gagal mencatat rekam pulang: $errorMsg"),
+              content: Text("Gagal mencatat rekam pulang: $displayMessage"),
               backgroundColor: Colors.red,
+              duration: const Duration(seconds: 4),
             ),
           );
         },
@@ -388,5 +401,20 @@ class _DraggableLocationSheetState extends State<DraggableLocationSheet>
         },
       );
     }
+  }
+
+  String _extractErrorMessage(String errorMsg) {
+    // Jika error message mengandung "Exception: ", hapus prefix tersebut
+    if (errorMsg.startsWith('Exception: ')) {
+      return errorMsg.substring(11); // Hapus "Exception: "
+    }
+
+    // Jika masih mengandung format lama, coba ekstrak pesan yang lebih bermakna
+    if (errorMsg.contains('Status code:')) {
+      // Jika pesan masih format lama, return pesan default yang lebih user-friendly
+      return "Terjadi kesalahan. Silakan coba lagi.";
+    }
+
+    return errorMsg;
   }
 }

@@ -286,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildProfileAvatar(ProfileProvider provider) {
     if (provider.hasPhoto && provider.photo != null) {
       final imageUrl = provider.photoUrl;
-      print("Loading image from URL: $imageUrl");
+      debugPrint("Loading image from URL: $imageUrl");
       return CircleAvatar(
         radius: 50,
         backgroundColor: Color(0xFFD2B48C),

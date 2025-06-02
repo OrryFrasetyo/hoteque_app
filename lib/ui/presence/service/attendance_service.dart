@@ -53,6 +53,7 @@ class AttendanceService {
           // Navigate back to home screen (delay slightly to allow state update)
           Future.microtask(() {
             // Use Router for navigation
+            if (!context.mounted) return;
             final routerDelegate = Router.of(context).routerDelegate;
             if (routerDelegate is MyRouteDelegate) {
               routerDelegate.navigateToHome();
