@@ -94,8 +94,8 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
         onPressed: () {
           // Menggunakan RouteDelegate untuk navigasi ke AddScheduleScreen
           final routeDelegate = Provider.of<MyRouteDelegate>(
-            context, 
-            listen: false
+            context,
+            listen: false,
           );
           routeDelegate.navigateToAddSchedule();
         },
@@ -196,7 +196,10 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
               provider.fetchSchedules(widget.employee);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF90612D)),
-            child: const Text('Coba Lagi'),
+            child: Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 8),
+              child: Text('Coba Lagi'),
+            ),
           ),
         ],
       ),
@@ -286,19 +289,21 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EditScheduleScreen(
-                              employee: widget.employee,
-                              scheduleData: _convertToScheduleMap(schedule),
-                              scheduleIndex: index,
-                              onUpdate: (_) {
-                                // Refresh schedules after update
-                                final provider = Provider.of<ScheduleDepartmentProvider>(
-                                  context,
-                                  listen: false,
-                                );
-                                provider.fetchSchedules(widget.employee);
-                              },
-                            ),
+                            builder:
+                                (context) => EditScheduleScreen(
+                                  employee: widget.employee,
+                                  scheduleData: _convertToScheduleMap(schedule),
+                                  scheduleIndex: index,
+                                  onUpdate: (_) {
+                                    // Refresh schedules after update
+                                    final provider =
+                                        Provider.of<ScheduleDepartmentProvider>(
+                                          context,
+                                          listen: false,
+                                        );
+                                    provider.fetchSchedules(widget.employee);
+                                  },
+                                ),
                           ),
                         );
                       },
@@ -329,97 +334,98 @@ class _ScheduleDepartmentEmployeeState extends State<ScheduleEmployeeScreen> {
   void _showDeleteConfirmation(Schedule schedule) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Konfirmasi'),
-        content: const Text(
-          'Apakah Anda yakin ingin menghapus jadwal ini?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(dialogContext); // Tutup dialog konfirmasi
-              
-              // Tampilkan loading dialog
-              BuildContext? loadingDialogContext;
-              if (!mounted) return;
-              
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) {
-                  loadingDialogContext = context;
-                  return const AlertDialog(
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircularProgressIndicator(color: Color(0xFF90612D)),
-                        SizedBox(height: 16),
-                        Text('Menghapus jadwal...'),
-                      ],
-                    ),
+      builder:
+          (dialogContext) => AlertDialog(
+            title: const Text('Konfirmasi'),
+            content: const Text(
+              'Apakah Anda yakin ingin menghapus jadwal ini?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Batal'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(dialogContext); // Tutup dialog konfirmasi
+
+                  // Tampilkan loading dialog
+                  BuildContext? loadingDialogContext;
+                  if (!mounted) return;
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      loadingDialogContext = context;
+                      return const AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(color: Color(0xFF90612D)),
+                            SizedBox(height: 16),
+                            Text('Menghapus jadwal...'),
+                          ],
+                        ),
+                      );
+                    },
                   );
+
+                  // Panggil provider untuk menghapus jadwal
+                  final deleteProvider = Provider.of<DeleteScheduleProvider>(
+                    context,
+                    listen: false,
+                  );
+
+                  final success = await deleteProvider.deleteSchedule(
+                    employee: widget.employee,
+                    scheduleId: schedule.id,
+                  );
+
+                  // Tutup dialog loading
+                  if (mounted && loadingDialogContext != null) {
+                    Navigator.of(loadingDialogContext!).pop();
+                  }
+
+                  // Tampilkan snackbar berdasarkan hasil
+                  if (!mounted) return;
+
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Jadwal berhasil dihapus'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    // Refresh jadwal setelah berhasil dihapus
+                    final provider = Provider.of<ScheduleDepartmentProvider>(
+                      context,
+                      listen: false,
+                    );
+                    provider.fetchSchedules(widget.employee);
+                  } else {
+                    // Ambil pesan error dari state
+                    final state = deleteProvider.state;
+                    String errorMessage = 'Gagal menghapus jadwal';
+
+                    if (state is DeleteScheduleErrorState) {
+                      errorMessage = state.message;
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(errorMessage),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
-              );
-              
-              // Panggil provider untuk menghapus jadwal
-              final deleteProvider = Provider.of<DeleteScheduleProvider>(
-                context,
-                listen: false,
-              );
-              
-              final success = await deleteProvider.deleteSchedule(
-                employee: widget.employee,
-                scheduleId: schedule.id,
-              );
-              
-              // Tutup dialog loading
-              if (mounted && loadingDialogContext != null) {
-                Navigator.of(loadingDialogContext!).pop();
-              }
-              
-              // Tampilkan snackbar berdasarkan hasil
-              if (!mounted) return;
-              
-              if (success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Jadwal berhasil dihapus'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-                
-                // Refresh jadwal setelah berhasil dihapus
-                final provider = Provider.of<ScheduleDepartmentProvider>(
-                  context,
-                  listen: false,
-                );
-                provider.fetchSchedules(widget.employee);
-              } else {
-                // Ambil pesan error dari state
-                final state = deleteProvider.state;
-                String errorMessage = 'Gagal menghapus jadwal';
-                
-                if (state is DeleteScheduleErrorState) {
-                  errorMessage = state.message;
-                }
-                
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(errorMessage),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Hapus'),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: const Text('Hapus'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 }

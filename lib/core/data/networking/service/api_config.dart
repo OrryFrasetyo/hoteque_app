@@ -1,5 +1,5 @@
 class ApiConfig {
-  static const String baseUrl = "http://192.168.8.233:3000";
+  static const String baseUrl = "https://zmkzjb35-3000.asse.devtunnels.ms";
   // static const String baseUrl = "http://192.168.1.15:3000/api";
   static const String apiUrl = "$baseUrl/api";
 

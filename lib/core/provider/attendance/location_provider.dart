@@ -8,6 +8,7 @@ class LocationProvider extends ChangeNotifier {
     -0.914133401830605,
     100.40204405577474,
   );
+  
   // Radius kantor dalam meter (contoh: 70 meter)
   final double officeRadius = 70.0;
 

@@ -26,7 +26,7 @@ import 'package:path/path.dart' as path;
 
 class ApiServices {
   // static const String _baseUrl = "http://192.168.1.15:3000/api";
-  static const String _baseUrl = "http://192.168.8.233:3000/api";
+  static const String _baseUrl = "https://zmkzjb35-3000.asse.devtunnels.ms/api";
 
   final http.Client httpClient;
 
