@@ -25,7 +25,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as path;
 
 class ApiServices {
-  static const String _baseUrl = "https://backend-pkl-orry.up.railway.app//api";
+  static const String _baseUrl = "https://backend-pkl-orry.up.railway.app/api";
 
   final http.Client httpClient;
 
