@@ -147,7 +147,7 @@ samples, guidance on mobile development, and a full API reference.
 </details>
 
 ## Prototype App
-To design the project, open link figma [here](https://www.figma.com/proto/9QfOItvYLU1D6HOIlJ7iMz/Presensi-dan-Manajemen-Kinerja-Karyawan--Hotel?node-id=80-224&p=f&t=gwdXa5NgxlSaZT7f-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=80%3A224&show-proto-sidebar=1)
+To design the project, open link figma [here](https://www.figma.com/design/9QfOItvYLU1D6HOIlJ7iMz/Presensi-dan-Manajemen-Kinerja-Karyawan--Hotel?node-id=0-1&p=f&t=8s9CMBpBprDGfXgX-0)
 
 ## License
 
