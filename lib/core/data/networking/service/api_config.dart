@@ -1,5 +1,5 @@
 class ApiConfig {
-  static const String baseUrl = "https://backend-pkl-orry.up.railway.app";
+  static const String baseUrl = "https://mpfqc400-3000.asse.devtunnels.ms";
   static const String apiUrl = "$baseUrl/api";
 
   // Helper untuk mengonversi path relatif menjadi URL lengkap

@@ -25,7 +25,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as path;
 
 class ApiServices {
-  static const String _baseUrl = "https://backend-pkl-orry.up.railway.app/api";
+  static const String _baseUrl = "https://mpfqc400-3000.asse.devtunnels.ms/api";
 
   final http.Client httpClient;
 
@@ -66,6 +66,11 @@ class ApiServices {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email, "password": password}),
       );
+
+      // Tambahkan logging untuk debugging
+      debugPrint('Response Status: ${response.statusCode}');
+      debugPrint('Response Body: ${response.body}');
+      debugPrint('Response Headers: ${response.headers}');
 
       final json = jsonDecode(response.body);
 
