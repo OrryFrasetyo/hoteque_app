@@ -17,6 +17,7 @@ import 'package:hoteque_app/core/provider/schedule/schedule_now_provider.dart';
 import 'package:hoteque_app/core/provider/attendance/time_provider.dart';
 import 'package:hoteque_app/core/provider/profile/update_profile_provider.dart';
 import 'package:hoteque_app/core/provider/schedule/update_schedule_provider.dart';
+import 'package:hoteque_app/core/provider/task/task_history_provider.dart';
 import 'package:hoteque_app/core/routes/my_route_delegate.dart';
 import 'package:hoteque_app/my_app.dart';
 import 'package:http/http.dart' as http;
@@ -42,9 +43,8 @@ class AppRoot extends StatelessWidget {
         Provider(create: (_) => MyRouteInformationParser()),
         Provider(create: (_) => ApiServices(httpClient: http.Client())),
         Provider(
-          create:
-              (context) =>
-                  AuthRepository(sharedPrefs, context.read<ApiServices>()),
+          create: (context) =>
+              AuthRepository(sharedPrefs, context.read<ApiServices>()),
         ),
         Provider(
           create: (context) => PositionRepository(context.read<ApiServices>()),
@@ -56,8 +56,8 @@ class AppRoot extends StatelessWidget {
           create: (context) => ScheduleRepository(context.read<ApiServices>()),
         ),
         Provider(
-          create:
-              (context) => AttendanceRepository(context.read<ApiServices>()),
+          create: (context) =>
+              AttendanceRepository(context.read<ApiServices>()),
         ),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(context.read<AuthRepository>()),
@@ -67,78 +67,64 @@ class AppRoot extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(
-          create:
-              (context) => PositionProvider(context.read<PositionRepository>()),
+          create: (context) =>
+              PositionProvider(context.read<PositionRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  ScheduleNowProvider(context.read<ScheduleRepository>()),
+          create: (context) =>
+              ScheduleNowProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(create: (_) => TimeProvider()),
         ChangeNotifierProvider(
-          create:
-              (context) => ProfileProvider(context.read<ProfileRepository>()),
+          create: (context) =>
+              ProfileProvider(context.read<ProfileRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  UpdateProfileProvider(context.read<ProfileRepository>()),
+          create: (context) =>
+              UpdateProfileProvider(context.read<ProfileRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  ScheduleEmployeeProvider(context.read<ScheduleRepository>()),
+          create: (context) =>
+              ScheduleEmployeeProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) => ScheduleDepartmentProvider(
-                context.read<ScheduleRepository>(),
-              ),
+          create: (context) =>
+              ScheduleDepartmentProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  AddScheduleProvider(context.read<ScheduleRepository>()),
+          create: (context) =>
+              AddScheduleProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  UpdateScheduleProvider(context.read<ScheduleRepository>()),
+          create: (context) =>
+              UpdateScheduleProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  DeleteScheduleProvider(context.read<ScheduleRepository>()),
+          create: (context) =>
+              DeleteScheduleProvider(context.read<ScheduleRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  AttendanceNowProvider(context.read<AttendanceRepository>()),
+          create: (context) =>
+              AttendanceNowProvider(context.read<AttendanceRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) => AttendanceThreeDaysProvider(
-                context.read<AttendanceRepository>(),
-              ),
+          create: (context) =>
+              AttendanceThreeDaysProvider(context.read<AttendanceRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) =>
-                  AttendanceMonthProvider(context.read<AttendanceRepository>()),
+          create: (context) =>
+              AttendanceMonthProvider(context.read<AttendanceRepository>()),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) => ClockInOutAttendanceProvider(
-                context.read<AttendanceRepository>(),
-              ),
+          create: (context) => ClockInOutAttendanceProvider(
+            context.read<AttendanceRepository>(),
+          ),
         ),
         ChangeNotifierProvider(
-          create:
-              (context) => AttendanceByStatusProvider(
-                context.read<AttendanceRepository>(),
-              ),
+          create: (context) =>
+              AttendanceByStatusProvider(context.read<AttendanceRepository>()),
         ),
+        ChangeNotifierProvider(create: (context) => TaskHistoryProvider()),
       ],
       child: MyApp(),
     );

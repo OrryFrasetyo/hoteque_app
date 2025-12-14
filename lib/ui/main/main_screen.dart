@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hoteque_app/ui/history/history_screen.dart';
+import 'package:hoteque_app/ui/history/history_task_screen.dart';
 import 'package:hoteque_app/ui/home/home_screen.dart';
 import 'package:hoteque_app/ui/schedule/schedule_screen.dart';
 import 'package:hoteque_app/ui/task/task_screen.dart';
@@ -30,7 +30,7 @@ class MainScreen extends StatelessWidget {
         HomeScreen(onLogout: onLogout),
         ScheduleScreen(),
         TaskScreen(),
-        HistoryScreen(),
+        HistoryTaskScreen(),
       ],
     );
 

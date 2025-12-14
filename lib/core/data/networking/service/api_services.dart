@@ -61,16 +61,21 @@ class ApiServices {
     String password,
   ) async {
     return await executeSafely(() async {
-      final response = await httpClient.post(
-        Uri.parse("$_baseUrl/login"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email, "password": password}),
-      );
+      final response = await httpClient
+          .post(
+            Uri.parse("$_baseUrl/login"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({"email": email, "password": password}),
+          )
+          .timeout(const Duration(seconds: 30));
 
       // Tambahkan logging untuk debugging
       debugPrint('Response Status: ${response.statusCode}');
       debugPrint('Response Body: ${response.body}');
-      debugPrint('Response Headers: ${response.headers}');
+
+      if (response.body.isEmpty) {
+        throw Exception("Server response is empty");
+      }
 
       final json = jsonDecode(response.body);
 

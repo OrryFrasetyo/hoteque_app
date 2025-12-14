@@ -29,25 +29,30 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
         listen: false,
       );
       clockInProvider.resetState();
-      
+
       // Periksa fake GPS setelah widget dibangun
       _checkMockLocation();
     });
   }
-  
+
   // Method untuk memeriksa fake GPS
   Future<void> _checkMockLocation() async {
     if (_hasCheckedMockLocation) return;
-    
-    final locationProvider = Provider.of<LocationProvider>(context, listen: false);
-    await Future.delayed(const Duration(seconds: 2)); // Beri waktu untuk mendapatkan lokasi
-    
+
+    final locationProvider = Provider.of<LocationProvider>(
+      context,
+      listen: false,
+    );
+    await Future.delayed(
+      const Duration(seconds: 2),
+    ); // Beri waktu untuk mendapatkan lokasi
+
     if (locationProvider.isMockLocation) {
       _hasCheckedMockLocation = true;
       _showMockLocationDialog();
     }
   }
-  
+
   // Method untuk menampilkan dialog peringatan fake GPS
   void _showMockLocationDialog() {
     showDialog(
@@ -91,10 +96,10 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
           // Gunakan Future.microtask untuk menghindari build errors
           Future.microtask(() => _showMockLocationDialog());
         }
-        
+
         // Tentukan judul berdasarkan status absensi
         final String title = attendanceNowProvider.buttonText;
-        
+
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -175,8 +180,8 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
                       elevation: 4,
                       mini: true,
                       child: const Icon(Icons.add),
-                      onPressed:
-                          () => locationProvider.updateCameraPosition(zoom: 19),
+                      onPressed: () =>
+                          locationProvider.updateCameraPosition(zoom: 19),
                     ),
                     const SizedBox(height: 8),
                     FloatingActionButton(
@@ -186,8 +191,8 @@ class _AttendanceMapsScreenState extends State<AttendanceMapsScreen> {
                       elevation: 4,
                       mini: true,
                       child: const Icon(Icons.remove),
-                      onPressed:
-                          () => locationProvider.updateCameraPosition(zoom: 16),
+                      onPressed: () =>
+                          locationProvider.updateCameraPosition(zoom: 16),
                     ),
                   ],
                 ),
